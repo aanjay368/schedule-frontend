@@ -1,0 +1,112 @@
+// React
+import { useState, useEffect, useRef, useMemo } from "react";
+
+// Lucide Icons
+import { ChevronDown } from "lucide-react";
+
+export default function CustomSelectInput({
+  name,
+  label,
+  icon,
+  options = [],
+  value,
+  onChange,
+  hasError,
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef(null);
+
+  const selectedOption = useMemo(() => {
+    return options.find((opt) => opt.value === value);
+  }, [options, value]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSelect = (option) => {
+    if (onChange) {
+      onChange({ target: { name: name, value: option.value } });
+    }
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="group relative w-full" ref={containerRef}>
+      {/* Container Input */}
+      <div className="relative flex items-center">
+        {/* Icon di Sisi Kiri (Sesuai desain yang Anda minta) */}
+        {icon && (
+          <div
+            className={`pointer-events-none absolute inset-y-1 left-0 flex size-8 items-center pl-3 transition-colors ${hasError ? "text-red-500" : "text-slate-400 group-focus-within:text-purple-500"} `}
+          >
+            {selectedOption?.icon ? selectedOption.icon : icon}
+          </div>
+        )}
+
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className={`block w-full rounded-lg border py-2.5 text-left text-sm transition-all focus:ring-2 focus:outline-none ${icon ? "pl-10" : "pl-4"} pr-10 ${
+            hasError
+              ? "border-red-500 focus:ring-red-200 dark:bg-red-500/5 dark:text-red-400"
+              : "border-slate-200 focus:border-purple-500 focus:ring-purple-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+          } `}
+        >
+          <span
+            className={`truncate ${hasError ? "text-red-500" : !selectedOption ? "text-slate-400" : "text-slate-900 dark:text-white"}`}
+          >
+            {selectedOption ? selectedOption.label : `Pilih ${label}`}
+          </span>
+        </button>
+
+        {/* Chevron Icon di Sisi Kanan */}
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+          <ChevronDown
+            size={18}
+            className={`transition-all duration-200 ${hasError ? "text-red-400" : "text-slate-400 group-focus-within:text-purple-500"} ${isOpen ? "rotate-180" : ""}`}
+          />
+        </div>
+      </div>
+
+      {/* Dropdown Panel */}
+      {isOpen && (
+        <ul className="ring-opacity-5 animate-in fade-in zoom-in-95 absolute z-50 mt-2 max-h-60 w-full overflow-auto rounded-xl border border-slate-200 bg-white shadow-2xl ring-1 ring-black duration-100 focus:outline-none dark:border-slate-800 dark:bg-slate-900">
+          {options.length > 0 ? (
+            options.map((option) => (
+              <li
+                key={option.value}
+                onClick={() => handleSelect(option)}
+                className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm transition-colors ${
+                  option.value === value
+                    ? "bg-purple-500 text-white"
+                    : "text-slate-600 hover:bg-purple-600 hover:text-white dark:text-slate-300"
+                } `}
+              >
+                <span
+                  className={`truncate ${option.value === value ? "font-bold" : "font-medium"}`}
+                >
+                  {option.label}
+                </span>
+                {option.icon && <span className="ml-2">{option.icon}</span>}
+              </li>
+            ))
+          ) : (
+            <li className="px-4 py-3 text-center text-sm text-slate-400 italic">
+              Tidak ada Data
+            </li>
+          )}
+        </ul>
+      )}
+    </div>
+  );
+}
