@@ -26,7 +26,7 @@ export default function StaffNavbar() {
       icon: <Calendar size={20} />,
     },
     {
-      label: "Profil Saya",
+      label: "Profil",
       path: `/staff/profile/${employee.id}`,
       icon: <User size={20} />,
     },
@@ -77,7 +77,7 @@ export default function StaffNavbar() {
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-xl font-bold text-transparent">
             {/* Logika Judul Sederhana */}
-            {menuItems.find((item) => pathname.includes(item.path))?.label ||
+            {menuItems.find((item) => pathname.includes(item.path.split("/")[2]))?.label ||
               "Dashboard"}
           </span>
 

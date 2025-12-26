@@ -17,6 +17,7 @@ import { useToast } from "../../../contexts/ToastProvider";
 
 // Services
 import {updateUserService} from "../../../services/userService";
+import Container from "../../../components/ui/Container";
 
 const UsernameSetting = () => {
   const { user, updateUser } = useAuth();
@@ -33,7 +34,7 @@ const UsernameSetting = () => {
   }, []);
 
   return (
-    <div className="mx-auto max-w-4xl px-4">
+    <Container className="mx-auto max-w-4xl px-4">
       <div className="space-y-6">
         <BackButton />
         <h2 className="flex items-center gap-2 border-b border-slate-300 pb-2 text-xl font-bold text-gray-800 dark:border-slate-800 dark:text-white">
@@ -80,7 +81,7 @@ const UsernameSetting = () => {
           onSubmit={handleSubmit}
         />
       </div>
-    </div>
+    </Container>
   );
 };
 

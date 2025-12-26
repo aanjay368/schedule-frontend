@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router";
-import { ArrowLeft } from "lucide-react";
+import { useParams } from "react-router";
 
 import { getScheduleDetailService } from "../../../services/scheduleService";
 import LoadingAnimation from "../../../components/ui/LoadingAnimation";
 import ScheduleDetail from "../../../components/common/ScheduleDetail";
 import BackButton from "../../../components/common/BackButton";
+import Container from "../../../components/ui/Container";
 
 export default function ScheduleInfo() {
   const { scheduleId } = useParams();
-  const navigate = useNavigate();
+
   const [schedule, setSchedule] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
@@ -39,16 +39,18 @@ export default function ScheduleInfo() {
     return <div className="p-20 text-center">{errorMessage}</div>;
 
   return (
-    <div className="mx-auto max-w-4xl px-4">      
+    <Container className="mx-auto w-full">
       <div className="space-y-6">
-        <BackButton/>
+        <BackButton />
         <section className="space-y-4">
           <SectionTitle color="bg-indigo-500">Detail Schedule</SectionTitle>
+          <ScheduleDetail schedule={schedule} />
+          <button className="mt-4 w-full rounded-xl bg-purple-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-purple-200 transition-all hover:bg-purple-700 active:scale-[0.98] disabled:opacity-70 dark:shadow-none">
+            Tambah ke Full
+          </button>
         </section>
       </div>
-
-      <ScheduleDetail schedule={schedule} />
-    </div>
+    </Container>
   );
 }
 

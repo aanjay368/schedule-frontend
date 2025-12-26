@@ -17,15 +17,15 @@ export default function EmployeeDetail({ employee }) {
         <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-purple-600 text-3xl font-bold text-white shadow-inner xl:h-24 xl:w-24 xl:rounded-3xl">
           {employee.nickname?.charAt(0) || employee.fullname?.charAt(0)}
         </div>
-        <div className="space-y-1 text-nowrap ">
+        <div className="space-y-1">
           <h2 className="font-extrabold tracking-tight text-slate-800 uppercase xl:text-3xl dark:text-white">
             {employee.fullname}
           </h2>
           <div className="flex items-center gap-2 text-sm text-purple-600 xl:font-medium dark:text-purple-400">
-            <Hash size={16} />
-            <div className="overflow-hidden max-w-35 xl:max-w-70">
-              <span className="px-70 marquee sm:animate-none sm:transform-none">{employee.id}</span>
-            </div>
+            <Hash className="w-4" />
+        <div className="max-w-37 overflow-hidden sm:max-w-full">
+          <span className="animate-marquee sm:animate-none pl-66 sm:pl-0">{employee.id}</span>
+        </div>
           </div>
         </div>
       </div>

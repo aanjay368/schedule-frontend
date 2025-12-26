@@ -2,27 +2,11 @@
 @import "tailwindcss";
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
-* {
-  font-family: "Poppins", sans-serif;  
-}
 
-::-webkit-scrollbar {
-  @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,700;1,400;1,700&display=swap");
-@import "tailwindcss";
-
-
-* {
-  font-family: "Poppins", sans-serif;
-}
-
-::-webkit-scrollbar {
-  display: none;
-  padding-bottom: 100px;
-}
-
-.marquee {
+@layer components {
+  .animate-marquee {
   display: inline-block;
-  animation: animate-marquee 10s linear infinite;
+  animation: animate-marquee 12s linear infinite;
   white-space: nowrap;
 }
 
@@ -34,13 +18,15 @@
     transform: translateX(-100%);
   }
 }
-display: none;
 }
 
-.has-bottom-padding::after {
-  content: "";
-  display: block;
-  height: 1rem; /* sesuai dengan p-4 = 16px */
-  flex-shrink: 0;
+* {
+  font-family: "Poppins", sans-serif;
 }
+
+::-webkit-scrollbar {
+  display: none;
+  padding-bottom: 100px;
+}
+
 

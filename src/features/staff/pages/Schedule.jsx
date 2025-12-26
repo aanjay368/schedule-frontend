@@ -1,5 +1,5 @@
 // React
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 // Third-party libraries
 import { format } from "date-fns";
@@ -7,17 +7,18 @@ import "react-datepicker/dist/react-datepicker.css";
 
 // Components
 import LoadingAnimation from "../../../components/ui/LoadingAnimation";
-import DateSelector from "../../../components/forms/DateSelector"
+import DateSelector from "../../../components/forms/CustomDateSelect";
 import DailySchedules from "../components/common/DailySchedules";
 
 // Lucide Icons
-import { FileText, CalendarDays } from "lucide-react";
+import { FileText } from "lucide-react";
 
 // Services
 import { getScheduleService } from "../../../services/scheduleService";
 
 // Contexts
 import { useAuth } from "../../../contexts/AuthProvider";
+import Container from "../../../components/ui/Container";
 
 export default function Schedule() {
   const { user } = useAuth();
@@ -42,8 +43,8 @@ export default function Schedule() {
     getScheduleService({
       year: dateParams.year,
       month: dateParams.month,
-      divisionId: user.division.id,
-      positionId: user.position.id,
+      divisionId: user?.division?.id,
+      positionId: user?.position?.id,
       date: dateParams.day,
     })
       .then((data) => {
@@ -57,36 +58,35 @@ export default function Schedule() {
       });
   }, [dateParams, user?.division?.id, user?.position?.id]);
 
-    return (
-    <div className="px mx-auto flex min-h-screen max-w-7xl flex-col items-center gap-8 sm:gap-12">
+  return (
+    <Container className="flex flex-col items-center gap-8 sm:gap-12">
       {/* Header */}
       <header className="space-y-4 text-center">
         <h1 className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-6xl">
           Jadwal Kerja
         </h1>
-        <p className="flex items-center justify-center gap-2 font-medium text-gray-500 dark:text-gray-400">
-          <CalendarDays size={18} />
-          {format(selectedDate, "EEEE, dd MMMM yyyy")}
-        </p>
       </header>
 
       {/* Control Section */}
-      <section className="w-full max-w-md">
+      <section className="w-full max-w-md space-y-2">
         <DateSelector
           date={format(selectedDate, "yyyy-MM-dd")}
           handleSelectDate={setSelectedDate}
         />
+        <p className="mt-1 text-center text-sm text-gray-500">
+          Pilih tanggal untuk melihat jadwal
+        </p>
       </section>
 
       {/* Content Section */}
-      <main className="w-full">
+      <section className="w-full">
         {isLoading ? (
           <div className="flex h-64 flex-col items-center justify-center gap-4">
             <LoadingAnimation />
             <p className="animate-pulse text-sm text-gray-400">
               Menghubungkan ke server...
             </p>
-            </div>
+          </div>
         ) : errorMessage ? (
           <ErrorPlaceholder message={errorMessage} />
         ) : (
@@ -94,10 +94,10 @@ export default function Schedule() {
             <DailySchedules schedules={schedules} />
           </div>
         )}
-      </main>
-        </div>
-    );
-  }
+      </section>
+    </Container>
+  );
+}
 
 /**
  * Sub-komponen untuk Error State agar JSX utama lebih bersih

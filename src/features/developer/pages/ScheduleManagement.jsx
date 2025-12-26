@@ -59,50 +59,48 @@ export default function ScheduleManagement() {
   }, [filters]);
 
   return (
-    <Wrapper className="">
-      <Container className="space-y-4">
-        {/* 1. Header Section */}
-        <Header
-          headerName="Management Jadwal Kerja"
-          headerDescription="Kelola rotasi dan penugasan shift karyawan untuk memastikan efektivitas operasional di setiap divisi dan posisi."
-        />
+    <Container className="space-y-4">
+      {/* 1. Header Section */}
+      <Header
+        headerName="Management Jadwal Kerja"
+        headerDescription="Kelola rotasi dan penugasan shift karyawan untuk memastikan efektivitas operasional di setiap divisi dan posisi."
+      />
 
-        {/* 2. Filter Bar (Menggunakan Card) */}
-        <Card className="p-6">
-          <DivisionPositionSelect filters={filters} setFilters={setFilters} />
-        </Card>
+      {/* 2. Filter Bar (Menggunakan Card) */}
+      <Card className="p-6">
+        <DivisionPositionSelect filters={filters} setFilters={setFilters} />
+      </Card>
 
-        {/* 3. Shift List Section */}
-        <Card className="p-6">
-          <h3 className="mb-4 text-lg font-bold text-slate-800 dark:text-white">
-            Daftar Shift
-          </h3>
-          <ShiftList filters={filters} />
-        </Card>
+      {/* 3. Shift List Section */}
+      <Card className="p-6">
+        <h3 className="mb-4 text-lg font-bold text-slate-800 dark:text-white">
+          Daftar Shift
+        </h3>
+        <ShiftList filters={filters} />
+      </Card>
 
-        {/* 4. Schedule Table Section */}
-        <Card className="p-6">
-          <div className="mb-8 flex flex-nowrap items-center justify-between gap-4">
-            <MonthAndYearInput filters={filters} setFilters={setFilters} />
-            <UploadSchedule filters={filters} onSuccess={fetchSchedules} />
+      {/* 4. Schedule Table Section */}
+      <Card className="p-6">
+        <div className="mb-8 flex flex-nowrap items-center justify-between gap-4">
+          <MonthAndYearInput filters={filters} setFilters={setFilters} />
+          <UploadSchedule filters={filters} onSuccess={fetchSchedules} />
+        </div>
+
+        {isLoading ? (
+          <div className="flex h-80 flex-col items-center justify-center gap-4">
+            <LoadingAnimation />
+            <p className="text-sm text-slate-500">Memuat Jadwal...</p>
           </div>
-
-          {isLoading ? (
-            <div className="flex h-80 flex-col items-center justify-center gap-4">
-              <LoadingAnimation />
-              <p className="text-sm text-slate-500">Memuat Jadwal...</p>
-            </div>
-          ) : (
-            <div className="flex overflow-x-auto">
-              <ScheduleTable
-                filters={filters}
-                schedules={schedules}
-                errorMessage={errorMessage}
-              />
-            </div>
-          )}
-        </Card>
-      </Container>
-    </Wrapper>
+        ) : (
+          <div className="flex overflow-x-auto">
+            <ScheduleTable
+              filters={filters}
+              schedules={schedules}
+              errorMessage={errorMessage}
+            />
+          </div>
+        )}
+      </Card>
+    </Container>
   );
 }

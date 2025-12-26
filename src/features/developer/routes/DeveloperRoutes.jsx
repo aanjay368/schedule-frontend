@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import { Route } from "react-router";
 import LoadingAnimation from "../../../components/ui/LoadingAnimation";
 import ProtectedRoute from "../../../routes/ProtectedRoute";
-import { SettingRoutes } from "../../setting/routes/SettingRoutes";
+import {SettingRoutes} from "../../setting/routes/SettingRoutes";
 
 // Lazy load components
 const EmployeeManagement = React.lazy(
@@ -33,6 +33,14 @@ const DeveloperModule = () => (
 export const DeveloperRoutes = (
   <Route path="/dev" element={<DeveloperModule />}>
     <Route
+      index
+      element={
+        <Suspense fallback={PageLoader}>
+          <ScheduleManagement />
+        </Suspense>
+      }
+    />
+    <Route
       path="employees"
       element={
         <Suspense fallback={PageLoader}>
@@ -41,7 +49,6 @@ export const DeveloperRoutes = (
       }
     />
     <Route
-      index
       path="schedules"
       element={
         <Suspense fallback={PageLoader}>

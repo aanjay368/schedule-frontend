@@ -12,9 +12,9 @@ const tipStyles = {
     text: "text-emerald-600 dark:text-emerald-400"
   },
   info: {
-    container: "border-purple-500 bg-purple-500/10 dark:bg-indigo-900/30",
+    container: "border-indigo-500 bg-indigo-500/10 dark:bg-indigo-900/30",
     icon: <Info size={15} strokeWidth={2.5} className="text-indigo-500" />,
-    text: "text-purple-600 dark:text-purple-400"
+    text: "text-indigo-600 dark:text-indigo-400"
   },
   danger: {
     container: "border-red-500 bg-red-500/10 dark:bg-red-900/30",

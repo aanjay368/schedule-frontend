@@ -2,7 +2,7 @@ import DatePicker from "react-datepicker";
 import { id } from "date-fns/locale";
 import { CalendarSearch } from "lucide-react";
 
-export default function DateSelector({ date, handleSelectDate }) {
+export default function CustomDateSelect({ date, handleSelectDate }) {
   return (
     <div className="mx-auto max-w-sm">
       <div className="group relative">
@@ -18,10 +18,7 @@ export default function DateSelector({ date, handleSelectDate }) {
           locale={id}
           popperPlacement="bottom-start"
         />
-      </div>
-      <p className="mt-1 text-center text-sm text-gray-500">
-        Pilih tanggal untuk melihat jadwal
-      </p>
+      </div>      
     </div>
   );
 }

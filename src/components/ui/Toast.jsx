@@ -27,7 +27,7 @@ export default function Toast({
   return (
     <div className="animate-in max-w-sm slide-in-from-right fade-in fixed right-5 bottom-5 z-[100] duration-300">
       <div
-        className={`flex items-center gap-3 rounded-xl border p-4 shadow-lg backdrop-blur-md ${styles[type]}`}
+        className={`flex items-center gap-3 rounded-xl border p-4 shadow-lg backdrop-blur-sm ${styles[type]}`}
       >
         <div className="flex-shrink-0">{icons[type]}</div>
         

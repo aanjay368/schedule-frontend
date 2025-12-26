@@ -10,6 +10,7 @@ import LoadingAnimation from "../../../components/ui/LoadingAnimation";
 import ScheduleTable from "../../../components/common/ScheduleTable";
 import { useCurrentEmployee } from "../contexts/CurrentEmployeeProvider";
 import BackButton from "../../../components/common/BackButton";
+import Container from "../../../components/ui/Container";
 
 export default function Profile() {
   const { employeeId } = useParams();
@@ -91,9 +92,9 @@ export default function Profile() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4">
+    <Container className="mx-auto">
       <div className="space-y-6">
-       <BackButton />
+        <BackButton />
         {/* Section: Detail Karyawan */}
         <section className="space-y-4">
           <SectionTitle color="bg-indigo-500">Detail Karyawan</SectionTitle>
@@ -103,16 +104,16 @@ export default function Profile() {
         {/* Section: Jadwal */}
         <section className="space-y-4">
           <SectionTitle color="bg-pink-500">Jadwal Bulan Ini</SectionTitle>
-          <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white dark:border-slate-800 dark:bg-slate-900">
+          <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white xl:w-fit dark:border-slate-800 dark:bg-slate-900">
             <ScheduleTable
               filters={{ year: currentYear, month: currentMonth }}
               schedules={schedules}
               errorMessage={errorMessage}
             />
-        </div>
+          </div>
         </section>
       </div>
-    </div>
+    </Container>
   );
 }
 

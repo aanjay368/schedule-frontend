@@ -177,61 +177,64 @@ export default function EmployeeManagement() {
         "md",
       );
     },
-    [openModalOverlay, closeModalOverlay, handleDeleteEmployee, handleUpdateEmployee],
+    [
+      openModalOverlay,
+      closeModalOverlay,
+      handleDeleteEmployee,
+      handleUpdateEmployee,
+    ],
   );
 
   return (
-    <Wrapper>
-      <Container className="space-y-6">
-        <Header
-          headerName="Management Karyawan"
-          headerDescription="Kelola basis data identitas dan struktur penempatan karyawan untuk mendukung akurasi informasi operasional perusahaan."
-        />
+    <Container className="space-y-6">
+      <Header
+        headerName="Management Karyawan"
+        headerDescription="Kelola basis data identitas dan struktur penempatan karyawan untuk mendukung akurasi informasi operasional perusahaan."
+      />
 
-        {/* Tabel Data dengan Filter di dalamnya */}
-        <Card className="overflow-hidden">
-          {/* Header Tabel yang Menyatu dengan Filter */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 p-4 dark:border-slate-800">
-            {/* Kiri: Judul */}
-            <div className="min-w-fit">
-              <h3 className="text-lg font-bold text-slate-800 dark:text-white">
-                Daftar Karyawan
-              </h3>
-              <p className="text-xs text-slate-500">
-                {filteredEmployees.length} orang ditemukan
-              </p>
+      {/* Tabel Data dengan Filter di dalamnya */}
+      <Card className="overflow-hidden">
+        {/* Header Tabel yang Menyatu dengan Filter */}
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 p-4 dark:border-slate-800">
+          {/* Kiri: Judul */}
+          <div className="min-w-fit">
+            <h3 className="text-lg font-bold text-slate-800 dark:text-white">
+              Daftar Karyawan
+            </h3>
+            <p className="text-xs text-slate-500">
+              {filteredEmployees.length} orang ditemukan
+            </p>
+          </div>
+
+          {/* Tengah: EmployeeFilter (Search & Dropdowns) */}
+          <FilterEmployee filters={filters} onFilters={setFilters} />
+
+          {/* Kanan: Tombol Tambah */}
+          <button
+            onClick={handleAddEmployee}
+            className="flex items-center gap-2 rounded-lg bg-pink-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-pink-100 transition-all hover:bg-pink-700 active:scale-95 dark:shadow-none"
+          >
+            <PlusIcon size={18} />
+            <span>Karyawan</span>
+          </button>
+        </div>
+
+        {/* Area Data / Loading */}
+        <div className="min-h-[50vh]">
+          {isLoading ? (
+            <div className="flex h-80 flex-col items-center justify-center gap-4">
+              <LoadingAnimation />
+              <p className="text-sm text-slate-500">Menyinkronkan data...</p>
             </div>
-
-            {/* Tengah: EmployeeFilter (Search & Dropdowns) */}          
-             <FilterEmployee filters={filters} onFilters={setFilters}/>
-
-            {/* Kanan: Tombol Tambah */}
-            <button
-              onClick={handleAddEmployee}
-              className="flex items-center gap-2 rounded-lg bg-pink-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-pink-100 transition-all hover:bg-pink-700 active:scale-95 dark:shadow-none"
-            >
-              <PlusIcon size={18} />
-              <span>Karyawan</span>
-            </button>
-          </div>
-
-          {/* Area Data / Loading */}
-          <div className="min-h-[50vh]">
-            {isLoading ? (
-              <div className="flex h-80 flex-col items-center justify-center gap-4">
-                <LoadingAnimation />
-                <p className="text-sm text-slate-500">Menyinkronkan data...</p>
-              </div>
-            ) : (
-              <EmployeeTable
-                employees={filteredEmployees}
-                onSelect={handleSelectEmployee} // Handler klik baris
-                errorMessage={errorMessage}
-              />
-            )}
-          </div>
-        </Card>
-      </Container>
-    </Wrapper>
+          ) : (
+            <EmployeeTable
+              employees={filteredEmployees}
+              onSelect={handleSelectEmployee} // Handler klik baris
+              errorMessage={errorMessage}
+            />
+          )}
+        </div>
+      </Card>
+    </Container>
   );
 }

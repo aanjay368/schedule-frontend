@@ -1,8 +1,8 @@
 import { Link } from "react-router";
-import {useCurrentEmployee} from "../../contexts/CurrentEmployeeProvider";
+import { useCurrentEmployee } from "../../contexts/CurrentEmployeeProvider";
+import { MessageSquare, MessageSquareWarning } from "lucide-react";
 
-export default function Footer() {  
-
+export default function Footer() {
   const employee = useCurrentEmployee();
 
   return (
@@ -13,9 +13,9 @@ export default function Footer() {
         <div className="absolute -right-40 -bottom-40 h-80 w-80 rounded-full bg-gradient-to-br from-sky-500/10 to-cyan-500/10 blur-3xl"></div>
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl space-y-6 px-4 pt-10 pb-6 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <div className="mb-6 flex items-center gap-3">
@@ -28,21 +28,20 @@ export default function Footer() {
               </div>
             </div>
 
-            <p className="mb-6 max-w-md text-gray-300">
+            <p className="max-w-md text-gray-300">
               Jika terjadi masalah atau ingin menambahkan fitur baru bisa
-              langsung hubungi Zainul dengan nomor Whatsapp yang sudah tertera
-              di bawah atau juga bisa klik langsung ke nomornya. Anda akan akan
-              di arahkan langsung ke Whatsapp
+              langsung hubungi pihak Pengembang dengan cara Buat Laporan di
+              bawah atau juga bisa lewat Pengaturan.
             </p>
           </div>
 
           {/* Links Sections */}
 
-          <div>
-            <h4 className="mb-4 text-sm font-semibold tracking-wider text-gray-400 uppercase">
+          <div className="space-y-3">
+            <h4 className="border-b border-slate-700 pl-3 pb-3 text-sm font-semibold tracking-wider text-gray-400 uppercase">
               Quick Menu
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-3 pl-3">
               <li>
                 <Link
                   to="/staff/schedules"
@@ -59,44 +58,28 @@ export default function Footer() {
                   Profil
                 </Link>
               </li>
+              <li>
+                <Link
+                  to={`/staff/settings`}
+                  className="inline-block text-gray-300 transition-colors duration-300 hover:translate-x-1 hover:text-white"
+                >
+                  Pengaturan
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
 
         {/* Social Connect Section */}
-        <div className="mt-12 border-t border-gray-800 pt-8">
-          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-400">
-                Terhubung dengan Zainul:
-              </span>
-              <a
-                className="flex-1 text-sm"
-                href="https://wa.me/6281233168341"
-                target="_blank"
-              >
-                +62 812 3316 8341
-              </a>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <span>Status:</span>
-                <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                <span>Semua sistem berjalan normal</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Link className="block border-y border-gray-700 p-4 text-center text-gray-400">
+          Buat Laporan
+        </Link>
 
         {/* Bottom Bar */}
-        <div className="mt-8 border-t border-gray-800 pt-8">
-          <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
-            <div className="text-sm text-gray-400">
-              Copyright by Ahmad Zainul Hasan © 2025
-            </div>
-          </div>
-        </div>
+
+        <p className="text-center text-sm text-gray-400">
+          Copyright by Ahmad Zainul Hasan © 2025
+        </p>
       </div>
     </footer>
   );

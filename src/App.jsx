@@ -10,23 +10,23 @@ import PageNotFound from "./pages/PageNotFound";
 
 // Feature Routes
 import { AuthRoutes } from "./features/auth/routes/AuthRoutes";
-import { DeveloperRoutes } from "./features/developer/routes/DevelopeRoutes";
+import { DeveloperRoutes } from "./features/developer/routes/DeveloperRoutes";
 import { StaffRoutes } from "./features/staff/routes/StaffRoutes";
 
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <ToastProvider>          
-            <ThemeProvider>
-              <Routes>
-                {AuthRoutes}
-                {DeveloperRoutes}
-                {StaffRoutes}
-                <Route path="*" element={<PageNotFound />} />
-              </Routes>
-            </ThemeProvider>          
-        </ToastProvider>
+        <ThemeProvider>
+          <ToastProvider>
+            <Routes>
+              {AuthRoutes}
+              {DeveloperRoutes}
+              {StaffRoutes}
+              <Route path="*" element={<PageNotFound />} />
+            </Routes>
+          </ToastProvider>
+        </ThemeProvider>
       </AuthProvider>
     </BrowserRouter>
   );

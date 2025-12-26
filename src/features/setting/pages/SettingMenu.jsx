@@ -2,9 +2,7 @@ import {
   User,
   KeyRound,
   Palette,
-  LifeBuoy,
   Smartphone,
-  MessageSquare,
   MessageSquareWarning,
 } from "lucide-react";
 
@@ -13,56 +11,46 @@ import { Link, useLocation } from "react-router";
 
 // UI Components
 import Container from "../../../components/ui/Container";
-import Wrapper from "../../../components/ui/Wrapper";
 import Card from "../../../components/ui/Card";
 
 export default function SettingMenu() {
   return (
-    <Wrapper className="min-h-screen">
-      <Container className="">
-        {/* HEADER */}
-
-        {/* --- 1. MENU UTAMA --- */}
-        <div className="space-y-6">
-          <SettingSection title="Akses Akun">
-            <SettingMenuItem
-              icon={<User size={18} className="text-blue-500" />}
-              label="Username"
-              desc="Identitas login unik"
-              path="username"
-            />
-            <SettingMenuItem
-              icon={<KeyRound size={18} className="text-orange-500" />}
-              label="Password"
-              desc="Kunci keamanan sistem"
-              path="password"
-            />
-          </SettingSection>
-          <SettingSection title="Preferences">
-            <SettingMenuItem
-              icon={<Palette size={18} className="text-pink-500" />}
-              label="Tema Aplikasi"
-              desc="Mode visual perangkat"
-              path="theme"
-            />
-          </SettingSection>
-          <SettingSection title="Bantuan">
-            <SettingMenuItem
-              icon={<MessageSquareWarning size={20} className="text-red-500" />}
-              label="Buat Laporan"
-              desc="Hubungi Pengembang & laporkan kendala"
-            />
-          </SettingSection>
-          <SettingSection>
-            <SettingMenuItem
-              icon={<Smartphone size={20} className="text-emerald-500" />}
-              label="Login Terakhir"
-              desc="Android Chrome • Surabaya, ID • 10 menit yang lalu"
-            />
-          </SettingSection>
-        </div>
-      </Container>
-    </Wrapper>
+    <Container className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <SettingSection title="Akses Akun">
+        <SettingMenuItem
+          icon={<User size={18} className="text-blue-500" />}
+          label="Username"
+          desc="Identitas login unik"
+          path="username"
+        />
+        <SettingMenuItem
+          icon={<KeyRound size={18} className="text-orange-500" />}
+          label="Password"
+          desc="Kunci keamanan sistem"
+          path="password"
+        />
+        <SettingMenuItem
+          icon={<Smartphone size={20} className="text-red-500" />}
+          label="Login Terakhir"
+          desc="Android Chrome • Surabaya, ID • 10 menit yang lalu"
+        />
+      </SettingSection>
+      <SettingSection title="Preferences">
+        <SettingMenuItem
+          icon={<Palette size={18} className="text-pink-500" />}
+          label="Tema Aplikasi"
+          desc="Mode visual perangkat"
+          path="theme"
+        />
+      </SettingSection>
+      <SettingSection title="Bantuan">
+        <SettingMenuItem
+          icon={<MessageSquareWarning size={20} className="text-red-500" />}
+          label="Buat Laporan"
+          desc="Hubungi Pengembang & laporkan kendala"
+        />
+      </SettingSection>
+    </Container>
   );
 }
 
