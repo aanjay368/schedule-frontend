@@ -8,28 +8,7 @@ import { Users, User as UserIcon } from "lucide-react";
 import { groupSchedulesByShift } from "../../../../utils/scheduleUtils";
 
 // Menggunakan objek style yang Anda berikan
-const shiftStyles = {
-  purple: {
-    card: "dark:bg-purple-600/20 bg-purple-600/80 dark:border-purple-600/50 text-white",
-    label: "bg-purple-700/40 text-white",
-    employee: "bg-purple-800/30 border-purple-400/20",
-  },
-  pink: {
-    card: "dark:bg-pink-600/20 bg-pink-600/80 dark:border-pink-600/50 text-white",
-    label: "bg-pink-700/40 text-white",
-    employee: "bg-pink-800/30 border-pink-400/20",
-  },
-  indigo: {
-    card: "dark:bg-indigo-600/20 bg-indigo-600/80 dark:border-indigo-600/50 text-white",
-    label: "bg-indigo-700/40 text-white",
-    employee: "bg-indigo-800/30 border-indigo-400/20",
-  },
-  red: {
-    card: "dark:bg-red-600/20 bg-red-600/70 dark:border-red-600/50 text-white",
-    label: "bg-red-700/30 text-white",
-    employee: "bg-red-800/30 border-red-400/20",
-  },
-};
+import { shiftStyles } from "../.././../../constants/shiftStyleConstants";
 
 export default function DailySchedules({ schedules }) {
   const groupedData = groupSchedulesByShift(schedules);

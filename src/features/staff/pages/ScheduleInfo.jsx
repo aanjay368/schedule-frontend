@@ -6,6 +6,7 @@ import LoadingAnimation from "../../../components/ui/LoadingAnimation";
 import ScheduleDetail from "../../../components/common/ScheduleDetail";
 import BackButton from "../../../components/common/BackButton";
 import Container from "../../../components/ui/Container";
+import DetailHeader from "../../../components/ui/DetailHeader";
 
 export default function ScheduleInfo() {
   const { scheduleId } = useParams();
@@ -43,7 +44,7 @@ export default function ScheduleInfo() {
       <div className="space-y-6">
         <BackButton />
         <section className="space-y-4">
-          <SectionTitle color="bg-indigo-500">Detail Schedule</SectionTitle>
+          <DetailHeader color="bg-indigo-500">Detail Schedule</DetailHeader>
           <ScheduleDetail schedule={schedule} />
           <button className="mt-4 w-full rounded-xl bg-purple-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-purple-200 transition-all hover:bg-purple-700 active:scale-[0.98] disabled:opacity-70 dark:shadow-none">
             Tambah ke Full
@@ -51,14 +52,5 @@ export default function ScheduleInfo() {
         </section>
       </div>
     </Container>
-  );
-}
-
-function SectionTitle({ children, color }) {
-  return (
-    <h2 className="flex items-center gap-2 text-xl font-bold text-gray-800 dark:text-white">
-      <span className={`h-2 w-2 rounded-full ${color}`}></span>
-      {children}
-    </h2>
   );
 }

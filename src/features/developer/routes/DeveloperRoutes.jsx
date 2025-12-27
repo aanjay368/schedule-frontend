@@ -1,8 +1,8 @@
 import React, { Suspense } from "react";
 import { Route } from "react-router";
-import LoadingAnimation from "../../../components/ui/LoadingAnimation";
 import ProtectedRoute from "../../../routes/ProtectedRoute";
 import {SettingRoutes} from "../../setting/routes/SettingRoutes";
+import PageLoader from "../../../components/ui/PageLoader"
 
 // Lazy load components
 const EmployeeManagement = React.lazy(
@@ -13,13 +13,6 @@ const ScheduleManagement = React.lazy(
 );
 const DeveloperLayout = React.lazy(
   () => import("../components/layouts/DeveloperLayout"),
-);
-
-// Helper Loading untuk Suspense
-const PageLoader = (
-  <div className="flex min-h-screen items-center justify-center dark:bg-slate-900">
-    <LoadingAnimation />
-  </div>
 );
 
 const DeveloperModule = () => (

@@ -20,7 +20,7 @@ import { getScheduleService } from "../../../services/scheduleService";
 import { useAuth } from "../../../contexts/AuthProvider";
 import Container from "../../../components/ui/Container";
 
-export default function Schedule() {
+export default function SearchSchedule() {
   const { user } = useAuth();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [schedules, setSchedules] = useState([]);

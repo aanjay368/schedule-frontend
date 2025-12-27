@@ -1,15 +1,15 @@
 import React, { Suspense } from "react";
 import { Route } from "react-router";
-import LoadingAnimation from "../../../components/ui/LoadingAnimation";
 import ProtectedRoute from "../../../routes/ProtectedRoute";
 import { SettingRoutes } from "../../setting/routes/SettingRoutes";
 import ScheduleInfo from "../pages/ScheduleInfo";
+import PageLoader from "../../../components/ui/PageLoader";
 
 // Lazy load components
 const StaffLayout = React.lazy(
   () => import("../components/layouts/StaffLayout"),
 );
-const Schedule = React.lazy(() => import("../pages/Schedule"));
+const SearchSchedule = React.lazy(() => import("../pages/SearchSchedule"));
 const Profile = React.lazy(() => import("../pages/Profile"));
 
 export const StaffRoutes = (
@@ -17,21 +17,33 @@ export const StaffRoutes = (
     path="/staff"
     element={
       <ProtectedRoute>
-        <Suspense
-          fallback={
-            <div className="flex min-h-screen items-center justify-center dark:bg-slate-900">
-              <LoadingAnimation />
-            </div>
-          }
-        >
+        <Suspense fallback={<PageLoader />}>
           <StaffLayout />
         </Suspense>
       </ProtectedRoute>
     }
   >
-    <Route path="schedules" element={<Schedule />} />
-    <Route path="schedules/:scheduleId" element={<ScheduleInfo />} />
-    <Route path="profile/:employeeId" element={<Profile />} />
+    <Route path="schedules"  element={
+      <ProtectedRoute>
+        <Suspense fallback={<PageLoader />}>
+          <SearchSchedule />
+        </Suspense>
+      </ProtectedRoute>
+    } />
+    <Route path="schedules/:scheduleId"  element={
+      <ProtectedRoute>
+        <Suspense fallback={<PageLoader />}>
+          <ScheduleInfo />
+        </Suspense>
+      </ProtectedRoute>
+    } />
+    <Route path="profile/:employeeId"  element={
+      <ProtectedRoute>
+        <Suspense fallback={<PageLoader />}>
+          <Profile />
+        </Suspense>
+      </ProtectedRoute>
+    } />
     {SettingRoutes}
   </Route>
 );

@@ -3,7 +3,7 @@ import { Outlet } from "react-router";
 import Wrapper from "../../../../components/ui/Wrapper";
 import ShiftColorOptionsProvider from "../../contexts/ShiftColorOptionsProvider";
 import DivisionsProvider from "../../contexts/DivisionsProvider";
-import {ModalOverlayProvider} from "../../../../contexts/ModalOverlayProvider";
+import { ModalOverlayProvider } from "../../../../contexts/ModalOverlayProvider";
 
 export default function DeveloperLayout() {
   return (

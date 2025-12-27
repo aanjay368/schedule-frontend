@@ -10,28 +10,9 @@ import UpdateShift from "../forms/UpdateShift";
 import { useToast } from "../../../../contexts/ToastProvider";
 import { ACTIONS, dataReducer } from "../../../../utils/dataReducer";
 
+
 // Memetakan warna agar tetap bisa dibaca Tailwind JIT namun sesuai gaya lama Anda
-const shiftStyles = {
-  purple: {
-    card: "dark:bg-purple-600/20 bg-purple-600/80 dark:border-purple-600/30 text-white dark:text-purple-400",
-    label: "bg-purple-700/30 text-white dark:text-purple-300",
-    button: "bg-purple-700/30 hover:bg-purple-800/50",
-  },
-  pink: {
-    card: "dark:bg-pink-600/20 bg-pink-600/80 dark:border-pink-600/30 text-white dark:text-pink-400",
-    label: "bg-pink-700/30 text-white dark:text-pink-300",
-    button: "bg-pink-700/30 hover:bg-pink-800/50",
-  },
-  indigo: {
-    card: "dark:bg-indigo-600/20 bg-indigo-600/80 dark:border-indigo-600/30 text-white dark:text-indigo-400",
-    label: "bg-indigo-700/30 text-white dark:text-indigo-300",
-    button: "bg-indigo-700/30 hover:bg-indigo-800/50",
-  },
-  red: {
-    card: "dark:bg-red-600/20 bg-red-600/80 dark:border-red-600/30 text-white dark:text-red-400",
-    label: "bg-red-700/30 text-white dark:text-red-300",
-  },
-};
+import {shiftStyles } from "../../../../constants/shiftStyleConstants"
 
 const formatShiftTime = (time) => {
   if (!time) return "-";

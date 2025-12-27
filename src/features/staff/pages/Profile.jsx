@@ -11,6 +11,7 @@ import ScheduleTable from "../../../components/common/ScheduleTable";
 import { useCurrentEmployee } from "../contexts/CurrentEmployeeProvider";
 import BackButton from "../../../components/common/BackButton";
 import Container from "../../../components/ui/Container";
+import DetailHeader from "../../../components/ui/DetailHeader";
 
 export default function Profile() {
   const { employeeId } = useParams();
@@ -97,13 +98,13 @@ export default function Profile() {
         <BackButton />
         {/* Section: Detail Karyawan */}
         <section className="space-y-4">
-          <SectionTitle color="bg-indigo-500">Detail Karyawan</SectionTitle>
+          <DetailHeader color="bg-indigo-500">Detail Karyawan</DetailHeader>
           <EmployeeDetail employee={employee} />
         </section>
 
         {/* Section: Jadwal */}
         <section className="space-y-4">
-          <SectionTitle color="bg-pink-500">Jadwal Bulan Ini</SectionTitle>
+          <DetailHeader color="bg-pink-500">Jadwal Bulan Ini</DetailHeader>
           <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white xl:w-fit dark:border-slate-800 dark:bg-slate-900">
             <ScheduleTable
               filters={{ year: currentYear, month: currentMonth }}
@@ -117,14 +118,3 @@ export default function Profile() {
   );
 }
 
-/**
- * Komponen Kecil (Sub-component) untuk abstraksi UI
- */
-function SectionTitle({ children, color }) {
-  return (
-    <h2 className="flex items-center gap-2 text-xl font-bold text-gray-800 dark:text-white">
-      <span className={`h-2 w-2 rounded-full ${color}`}></span>
-      {children}
-    </h2>
-  );
-}

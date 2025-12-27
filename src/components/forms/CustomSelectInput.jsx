@@ -1,5 +1,5 @@
 // React
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useLayoutEffect } from "react";
 
 // Lucide Icons
 import { ChevronDown } from "lucide-react";
@@ -14,18 +14,37 @@ export default function CustomSelectInput({
   hasError,
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [openUp, setOpenUp] = useState(false); // State untuk arah
   const containerRef = useRef(null);
 
   const selectedOption = useMemo(() => {
     return options.find((opt) => opt.value === value);
   }, [options, value]);
 
+  // --- LOGIKA SMART POSITIONING ---
+  useLayoutEffect(() => {
+    if (isOpen && containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      
+      // Estimasi tinggi dropdown (max-h-60 adalah 240px + border/padding)
+      const dropdownHeight = 260; 
+
+      // Hitung sisa ruang di bawah
+      const spaceBelow = viewportHeight - rect.bottom;
+
+      // Jika ruang di bawah kurang dari tinggi dropdown, maka buka ke atas
+      if (spaceBelow < dropdownHeight) {
+        setOpenUp(true);
+      } else {
+        setOpenUp(false);
+      }
+    }
+  }, [isOpen]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
@@ -44,7 +63,6 @@ export default function CustomSelectInput({
     <div className="group relative w-full" ref={containerRef}>
       {/* Container Input */}
       <div className="relative flex items-center">
-        {/* Icon di Sisi Kiri (Sesuai desain yang Anda minta) */}
         {icon && (
           <div
             className={`pointer-events-none absolute inset-y-1 left-0 flex size-8 items-center pl-3 transition-colors ${hasError ? "text-red-500" : "text-slate-400 group-focus-within:text-purple-500"} `}
@@ -69,7 +87,6 @@ export default function CustomSelectInput({
           </span>
         </button>
 
-        {/* Chevron Icon di Sisi Kanan */}
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
           <ChevronDown
             size={18}
@@ -78,9 +95,17 @@ export default function CustomSelectInput({
         </div>
       </div>
 
-      {/* Dropdown Panel */}
+      {/* Dropdown Panel dengan Kondisi Arah */}
       {isOpen && (
-        <ul className="ring-opacity-5 animate-in fade-in zoom-in-95 absolute z-50 mt-2 max-h-60 w-full overflow-auto rounded-xl border border-slate-200 bg-white shadow-2xl ring-1 ring-black duration-100 focus:outline-none dark:border-slate-800 dark:bg-slate-900">
+        <ul 
+          className={`ring-opacity-5 absolute z-50 w-full overflow-auto rounded-xl border border-slate-200 bg-white shadow-2xl ring-1 ring-black focus:outline-none dark:border-slate-800 dark:bg-slate-900 max-h-60 duration-100
+            ${
+              openUp 
+                ? "bottom-full mb-2 animate-in fade-in zoom-in-95 slide-in-from-bottom-2" // Buka ke atas
+                : "top-full mt-2 animate-in fade-in zoom-in-95 slide-in-from-top-2"     // Buka ke bawah
+            }
+          `}
+        >
           {options.length > 0 ? (
             options.map((option) => (
               <li
@@ -92,9 +117,7 @@ export default function CustomSelectInput({
                     : "text-slate-600 hover:bg-purple-600 hover:text-white dark:text-slate-300"
                 } `}
               >
-                <span
-                  className={`truncate ${option.value === value ? "font-bold" : "font-medium"}`}
-                >
+                <span className={`truncate ${option.value === value ? "font-bold" : "font-medium"}`}>
                   {option.label}
                 </span>
                 {option.icon && <span className="ml-2">{option.icon}</span>}

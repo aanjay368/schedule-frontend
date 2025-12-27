@@ -14,9 +14,9 @@ export default function StaffLayout() {
 
   return (
     <CurrentEmployeeProvider>
-      <main className="transition-colors dark:bg-slate-900">
+      <main>
         <UserNavbar />
-        <Wrapper className="flex-1 px-4 py-16">
+        <Wrapper className="flex-1 px-4 py-16 transition-colors dark:bg-slate-900">
           <Outlet />
         </Wrapper>
         <Footer />
