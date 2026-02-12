@@ -1,5 +1,5 @@
 // React
-import { memo, useCallback } from "react";
+import { memo, useCallback, useState } from "react";
 
 // Lucide Icons
 import { Clock, Palette, Tag, TextIcon } from "lucide-react";
@@ -12,12 +12,16 @@ import { addShiftService } from "../../services/shiftService";
 
 // Contexts
 import { useToast } from "../../../../contexts/ToastProvider";
-import { useShiftColorOptions } from "../../contexts/ShiftColorOptionsProvider";
 
 function AddShift({ filters, onSuccess }) {
   const { showToast } = useToast();
-
-  const colorOptions = useShiftColorOptions();
+  const [addShiftForm, setAddShiftForm] = useState({
+    name: "",
+    label: "",
+    color: "",
+    start: "",
+    end: "",
+  });
 
   const fields = [
     {
@@ -31,13 +35,36 @@ function AddShift({ filters, onSuccess }) {
       name: "label",
       icon: <Tag />,
       type: "text",
+      maxLength: 2,
     },
     {
       label: "Warna",
-      name: "colorId",
+      name: "color",
       icon: <Palette />,
       type: "select",
-      options: colorOptions,
+      options: [
+        {
+          icon: (
+            <div className="inline-block h-2.5 w-2.5 rounded-full bg-purple-500" />
+          ),
+          label: "Ungu",
+          value: "PURPLE",
+        },
+        {
+          icon: (
+            <div className="inline-block h-2.5 w-2.5 rounded-full bg-pink-500" />
+          ),
+          label: "Pink",
+          value: "PINK",
+        },
+        {
+          icon: (
+            <div className="inline-block h-2.5 w-2.5 rounded-full bg-indigo-500" />
+          ),
+          label: "Biru",
+          value: "INDIGO",
+        },
+      ],
     },
     {
       label: "Masuk",
@@ -53,6 +80,16 @@ function AddShift({ filters, onSuccess }) {
     },
   ];
 
+  const handleChange = useCallback(
+    (e) => {
+      setAddShiftForm((prev) => ({
+        ...prev,
+        [e.target.name]: e.target.value,
+      }));
+    },
+    [addShiftForm],
+  );
+
   const handleSubmit = useCallback(
     async (formData) => {
       try {
@@ -62,7 +99,7 @@ function AddShift({ filters, onSuccess }) {
           positionId: filters.positionId,
         };
 
-        const data = await addShiftService(payload);
+        const { data } = await addShiftService(payload);
         onSuccess(data);
       } catch (err) {
         throw err;
@@ -74,11 +111,9 @@ function AddShift({ filters, onSuccess }) {
   return (
     <CustomFormComponent
       fields={fields}
+      formData={addShiftForm}
+      onChange={handleChange}
       onSubmit={handleSubmit}
-      initialData={{
-        divisionId: filters.divisionId,
-        positionId: filters.positionId,
-      }}
       buttonName={"Tambahkan"}
     />
   );

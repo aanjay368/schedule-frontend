@@ -10,14 +10,12 @@ import UpdateShift from "../forms/UpdateShift";
 import { useToast } from "../../../../contexts/ToastProvider";
 import { ACTIONS, dataReducer } from "../../../../utils/dataReducer";
 
-
-// Memetakan warna agar tetap bisa dibaca Tailwind JIT namun sesuai gaya lama Anda
-import {shiftStyles } from "../../../../constants/shiftStyleConstants"
+import { shiftStyles } from "../../../../constants/shiftStyleConstants";
 
 const formatShiftTime = (time) => {
   if (!time) return "-";
-  const [hour] = time.split(":").map(Number);
-  return hour >= 23 ? "LAST FLIGHT" : time;
+  const [hour, minute] = time.split(":").map(Number);
+  return hour >= 23 && minute >= 58 ? "LAST FLIGHT" : time;
 };
 
 export default function ShiftList({ filters }) {
@@ -31,7 +29,7 @@ export default function ShiftList({ filters }) {
 
     setIsLoading(true);
     getShiftsService(filters.divisionId, filters.positionId)
-      .then((data) => {
+      .then(({ data }) => {
         dispatch({ type: ACTIONS.SET, payload: data });
       })
       .catch(({ message }) => {
@@ -80,8 +78,8 @@ export default function ShiftList({ filters }) {
 
   const handleDeleteShift = useCallback(async (shift) => {
     try {
-      const deletedShift = await deleteShiftsService(shift.id);
-      dispatch({ type: ACTIONS.DELETE, payload: deletedShift.id });
+      const { data } = await deleteShiftsService(shift.id);
+      dispatch({ type: ACTIONS.DELETE, payload: data.id });
       showToast(
         `Data shift dengan nama ${shift.name} berhasil di hapus`,
         "success",
@@ -107,7 +105,7 @@ export default function ShiftList({ filters }) {
   return (
     <div className="flex flex-wrap gap-6">
       {shifts.map((shift) => {
-        const style = shiftStyles[shift.color?.name] || shiftStyles.purple;
+        const style = shiftStyles[shift.color] || shiftStyles.PURPLE;
 
         return (
           <div
@@ -127,7 +125,9 @@ export default function ShiftList({ filters }) {
               <div className="mt-2 space-y-1 text-sm font-medium opacity-80">
                 <div className="flex justify-between">
                   <span>Masuk:</span>
-                  <span className="font-mono">{shift.start || "-"}</span>
+                  <span className="font-mono">
+                    {formatShiftTime(shift.start)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Pulang:</span>

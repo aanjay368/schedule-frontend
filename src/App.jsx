@@ -13,21 +13,27 @@ import { AuthRoutes } from "./features/auth/routes/AuthRoutes";
 import { DeveloperRoutes } from "./features/developer/routes/DeveloperRoutes";
 import { StaffRoutes } from "./features/staff/routes/StaffRoutes";
 
+import { MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
+
 export default function App() {
+    
   return (
     <BrowserRouter>
+    <MantineProvider>
       <AuthProvider>
         <ThemeProvider>
           <ToastProvider>
             <Routes>
               {AuthRoutes}
               {DeveloperRoutes}
-              {StaffRoutes}
+              {StaffRoutes}            
               <Route path="*" element={<PageNotFound />} />
             </Routes>
           </ToastProvider>
         </ThemeProvider>
       </AuthProvider>
+      </MantineProvider>
     </BrowserRouter>
   );
 }

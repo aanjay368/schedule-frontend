@@ -10,6 +10,7 @@ export default function CustomSelectInput({
   icon,
   options = [],
   value,
+  placeholder,
   onChange,
   hasError,
 }) {
@@ -81,9 +82,9 @@ export default function CustomSelectInput({
           } `}
         >
           <span
-            className={`truncate ${hasError ? "text-red-500" : !selectedOption ? "text-slate-400" : "text-slate-900 dark:text-white"}`}
+            className={`truncate ${hasError ? "text-red-500" : !selectedOption ? "text-slate-400 italic" : "text-slate-900 dark:text-white"}`}
           >
-            {selectedOption ? selectedOption.label : `Pilih ${label}`}
+            {selectedOption ? selectedOption.label : placeholder ? placeholder  :`Pilih ${label}`}
           </span>
         </button>
 
@@ -98,7 +99,7 @@ export default function CustomSelectInput({
       {/* Dropdown Panel dengan Kondisi Arah */}
       {isOpen && (
         <ul 
-          className={`ring-opacity-5 absolute z-50 w-full overflow-auto rounded-xl border border-slate-200 bg-white shadow-2xl ring-1 ring-black focus:outline-none dark:border-slate-800 dark:bg-slate-900 max-h-60 duration-100
+          className={`ring-opacity-5 absolute z-50 w-full overflow-auto rounded-xl border border-slate-200 bg-white ring-1 ring-black focus:outline-none dark:border-slate-800 dark:bg-slate-900 max-h-60 duration-100
             ${
               openUp 
                 ? "bottom-full mb-2 animate-in fade-in zoom-in-95 slide-in-from-bottom-2" // Buka ke atas

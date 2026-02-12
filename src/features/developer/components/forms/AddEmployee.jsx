@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { User, LayoutGrid, UserCog } from "lucide-react";
 import CustomFormComponent from "../../../../components/forms/CustomFormComponent";
 import { addEmployeeService } from "../../../../services/employeeService";
@@ -7,7 +7,12 @@ import { useToast } from "../../../../contexts/ToastProvider";
 
 function AddEmployee({ onSuccess }) {
   const divisions = useDivision();
-  const { showToast } = useToast();
+  const [addEmployeeForm, setAddEmployeeForm] = useState({
+    nickname: "",
+    fullname: "",
+    divisionId: "",
+    positionId: "",
+  });
 
   // 2. Kumpulkan SEMUA posisi dari semua divisi (Flat Array)
   const allPositionOptions = useMemo(() => {
@@ -45,19 +50,20 @@ function AddEmployee({ onSuccess }) {
     [divisions],
   );
 
-
   const fields = [
     {
       label: "Nama Panggilan",
       name: "nickname",
       icon: <User size={18} />,
       type: "text",
+      placeholder: "Nama Panggilan Karyawan",
     },
     {
       label: "Nama Lengkap",
       name: "fullname",
       icon: <User size={18} />,
       type: "text",
+      placeholder: "Nama Lengkap Karyawan",
     },
     {
       label: "Divisi",
@@ -75,20 +81,32 @@ function AddEmployee({ onSuccess }) {
     },
   ];
 
-  const handleSubmit = async (formData) => {
+  const handleChange = useCallback(
+    (e) => {
+      setAddEmployeeForm((prev) => ({
+        ...prev,
+        [e.target.name]: e.target.value,
+      }));
+    },
+    [addEmployeeForm],
+  );
+
+  const handleSubmit = useCallback(async (formData) => {
     try {
-      const data = await addEmployeeService(formData);
-      onSuccess(data);      
+      const { data } = await addEmployeeService(formData);
+      onSuccess(data);
     } catch (err) {
       throw err;
     }
-  };
+  });
 
   return (
     <CustomFormComponent
       fields={fields}
+      formData={addEmployeeForm}
+      onChange={handleChange}
       onSubmit={handleSubmit}
-      buttonName="Tambahkan"
+      buttonName={"Tambahkan"}
     />
   );
 }

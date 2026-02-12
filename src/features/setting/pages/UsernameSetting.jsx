@@ -1,5 +1,5 @@
 // React
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 // Lucide Icons
 import { User } from "lucide-react";
@@ -18,10 +18,22 @@ import SettingDetailLayout from "../components/layouts/SettingDetailLayout";
 const UsernameSetting = () => {
   const { user, updateUser } = useAuth();
   const { showToast } = useToast();
+  const [updateUsernameForm, setUpdateUsernameForm] = useState({
+    username: "",
+  });
+
+  const handleChange = useCallback(
+    (e) =>
+      setUpdateUsernameForm((prev) => ({
+        ...prev,
+        [e.target.name]: e.target.value,
+      })),
+    [updateUsernameForm],
+  );
 
   const handleSubmit = useCallback(async (payload) => {
     try {
-      const data = await updateUserService(payload);
+      const {data} = await updateUserService(payload);      
       updateUser(data);
       showToast("Username berhasil diperbarui");
     } catch (err) {
@@ -61,9 +73,8 @@ const UsernameSetting = () => {
           },
         ]}
         buttonName="Ganti"
-        initialData={{
-          username: user.username,
-        }}
+        onChange={handleChange}
+        formData={updateUsernameForm}
         onSubmit={handleSubmit}
       />
     </SettingDetailLayout>

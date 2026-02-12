@@ -9,12 +9,18 @@ const ProtectedRoute = ({ children, requiredPosition }) => {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  if (requiredPosition && user.position.name !== requiredPosition) {
-    if (user.position.equalsIgnoreCase("DEVELOPER")) {
-      return <Navigate to="/dev/schedule" replace />;
-    } else if (user.position.name.equalsIgnoreCase("STAFF")) {
-      return <Navigate to="/staff/schedule" replace />;
-    } else {
+  if (requiredPosition) {
+    const positionName = user?.position?.name?.toUpperCase();
+
+    if (positionName !== requiredPosition.toUpperCase()) {
+      if (positionName === "DEVELOPER") {
+        return <Navigate to="/dev/schedule" replace />;
+      }
+
+      if (positionName === "STAFF") {
+        return <Navigate to="/staff/schedule" replace />;
+      }
+
       return <Navigate to="/" replace />;
     }
   }

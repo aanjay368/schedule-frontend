@@ -8,7 +8,7 @@ export default function DivisionsProvider({ children }) {
   const [divisions, setDivisions] = useState([]);
 
   useEffect(() => {
-    getDivisionsService().then((data) => {
+    getDivisionsService().then(({ data }) => {
       setDivisions(data);
     });
   }, []);

@@ -1,11 +1,10 @@
-import { useEffect, useState, useCallback, useMemo, useReducer } from "react";
-import { Ban, Edit, PlusIcon, Search, Trash2Icon } from "lucide-react";
+import { useEffect, useState, useCallback, useReducer } from "react";
+import { Ban, Edit, PlusIcon, Trash2Icon } from "lucide-react";
 
 // UI Components
 import Container from "../../../components/ui/Container";
 import Card from "../../../components/ui/Card";
-import Wrapper from "../../../components/ui/Wrapper";
-import LoadingAnimation from "../../../components/ui/LoadingAnimation";
+import DataStateWrapper from "../../../components/ui/DataStateWrapper";
 
 // Business Components
 import Header from "../components/ui/Header";
@@ -16,7 +15,7 @@ import FilterEmployee from "../components/forms/FilterEmployee";
 // Hooks / Services
 import {
   deleteEmployeeService,
-  getEmployeesService,
+  searchEmployeesService,
 } from "../../../services/employeeService";
 import { useModalOverlay } from "../../../contexts/ModalOverlayProvider";
 import EmployeeDetail from "../../../components/common/EmployeeDetail";
@@ -27,49 +26,34 @@ import { ACTIONS, dataReducer } from "../../../utils/dataReducer";
 export default function EmployeeManagement() {
   const [employees, dispatch] = useReducer(dataReducer, []);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [error, setError] = useState(null);
   const { openModalOverlay, closeModalOverlay } = useModalOverlay();
   const { showToast } = useToast();
   const [filters, setFilters] = useState({
     name: "",
-    divisionId: 0,
-    positionId: 0,
+    divisionId: null,
+    positionId: null,
   });
-
-  const filteredEmployees = useMemo(() => {
-    if (!employees) return [];
-
-    return employees.filter((emp) => {
-      const { name, divisionId, positionId } = filters;
-      const searchName = name.toLowerCase();
-      const matchesName =
-        emp.fullname?.toLowerCase().includes(searchName) ||
-        emp.nickname?.toLowerCase().includes(searchName);
-
-      // 2. Filter Dsuccessivisi (Jika divisionId 0 atau null, anggap "Semua", jika tidak cocokkan ID)
-      const matchesDivision = !divisionId || emp.division?.id === divisionId;
-      const matchesPosition = !positionId || emp.position?.id === positionId;
-
-      // Return true hanya jika semua kriteria terpenuhi
-      return matchesName && matchesDivision && matchesPosition;
-    });
-  }, [employees, filters]);
 
   useEffect(() => {
     setIsLoading(true);
-    setErrorMessage("");
+    setError(null);
 
-    getEmployeesService()
-      .then((data) => {
+    searchEmployeesService(filters)
+      .then(({ data }) => {
         dispatch({ type: ACTIONS.SET, payload: data });
       })
-      .catch(({ message }) => {
-        setErrorMessage(message || "Gagal memuat data karyawan");
+      .catch((err) => {
+        dispatch({
+          type: ACTIONS.SET,
+          payload: [],
+        });
+        setError(err);
       })
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  }, [filters]);
 
   const handleAddEmployee = useCallback(() => {
     openModalOverlay(
@@ -92,10 +76,10 @@ export default function EmployeeManagement() {
   const handleDeleteEmployee = useCallback(
     async (employee) => {
       try {
-        const deletedEmployee = await deleteEmployeeService(employee.id);
-        dispatch({ type: ACTIONS.DELETE, payload: deletedEmployee.id });
+        const { data } = await deleteEmployeeService(employee.id);
+        dispatch({ type: ACTIONS.DELETE, payload: data.id });
         showToast(
-          `karyawan dengan nama ${deletedEmployee.nickname} berhasil di hapus`,
+          `karyawan dengan nama ${employee.nickname} berhasil di hapus`,
           "success",
         );
         closeModalOverlay();
@@ -113,8 +97,8 @@ export default function EmployeeManagement() {
           {/* 1. Konten Detail */}
           <UpdateEmployee
             employee={employee}
-            onSuccess={(updateedEmployee) => {
-              dispatch({ type: ACTIONS.UPDATE, payload: updateedEmployee });
+            onSuccess={(updatedEmployee) => {
+              dispatch({ type: ACTIONS.UPDATE, payload: updatedEmployee });
               closeModalOverlay();
               showToast("Data karyawan berhasil di perbarui", "success");
             }}
@@ -125,8 +109,6 @@ export default function EmployeeManagement() {
             <button
               onClick={() => {
                 closeModalOverlay();
-                // Panggil fungsi untuk membuka modalOverlauseModalOverlay edit
-                handleSelectEmployee(employee);
               }}
               className="flex h-11 items-center gap-2 rounded-lg bg-red-600 px-6 py-2 text-sm font-semibold text-white shadow-md shadow-indigo-100 transition-all hover:bg-red-700 active:scale-95 dark:shadow-none"
             >
@@ -193,7 +175,7 @@ export default function EmployeeManagement() {
       />
 
       {/* Tabel Data dengan Filter di dalamnya */}
-      <Card className="overflow-hidden">
+      <Card className="p-6">
         {/* Header Tabel yang Menyatu dengan Filter */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 p-4 dark:border-slate-800">
           {/* Kiri: Judul */}
@@ -202,7 +184,7 @@ export default function EmployeeManagement() {
               Daftar Karyawan
             </h3>
             <p className="text-xs text-slate-500">
-              {filteredEmployees.length} orang ditemukan
+              {employees.length} orang ditemukan
             </p>
           </div>
 
@@ -221,18 +203,18 @@ export default function EmployeeManagement() {
 
         {/* Area Data / Loading */}
         <div className="min-h-[50vh]">
-          {isLoading ? (
-            <div className="flex h-80 flex-col items-center justify-center gap-4">
-              <LoadingAnimation />
-              <p className="text-sm text-slate-500">Menyinkronkan data...</p>
+          <DataStateWrapper
+            isLoading={isLoading}
+            error={error}
+            loadingMessage="Memuat data karyawan..."
+          >
+            <div className="overflow-hidden rounded-2xl">
+              <EmployeeTable
+                employees={employees}
+                onSelect={handleSelectEmployee}
+              />
             </div>
-          ) : (
-            <EmployeeTable
-              employees={filteredEmployees}
-              onSelect={handleSelectEmployee} // Handler klik baris
-              errorMessage={errorMessage}
-            />
-          )}
+          </DataStateWrapper>
         </div>
       </Card>
     </Container>

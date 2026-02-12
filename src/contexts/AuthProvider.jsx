@@ -8,17 +8,17 @@ const AuthContext = createContext(null);
 
 export const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {  
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
   const login = useCallback(async (loginForm) => {
     try {
-      const responseData = await loginService(loginForm);
+      const { data } = await loginService(loginForm);    
 
-      setUser(responseData.user);
-      localStorage.setItem("user", JSON.stringify(responseData.user));
+      setUser(data.user);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-      return responseData.user.position;
+      return data.user.position;
     } catch (err) {
       throw err;
     }

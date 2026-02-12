@@ -1,11 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
-import { getScheduleService } from "../../../services/scheduleService";
+import { searchSchedulesService } from "../../../services/scheduleService";
 
 // UI Components
 import Container from "../../../components/ui/Container";
 import Card from "../../../components/ui/Card";
-import Wrapper from "../../../components/ui/Wrapper";
-import LoadingAnimation from "../../../components/ui/LoadingAnimation";
 
 // Business Components
 import UploadSchedule from "../components/common/UploadSchedule";
@@ -14,6 +12,7 @@ import Header from "../components/ui/Header";
 import ShiftList from "../components/common/ShiftList";
 import MonthAndYearInput from "../components/forms/MonthAndYearSelect";
 import DivisionPositionSelect from "../components/forms/DivisionPositionSelect";
+import DataStateWrapper from "../../../components/ui/DataStateWrapper";
 
 export default function ScheduleManagement() {
   const [filters, setFilters] = useState({
@@ -24,31 +23,40 @@ export default function ScheduleManagement() {
   });
 
   const [schedules, setSchedules] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchSchedules = useCallback(async () => {
-    setIsLoading(true);
-    setErrorMessage("");
-    try {
-      if (
-        !filters.divisionId ||
-        !filters.positionId ||
-        !filters.month ||
-        !filters.year
-      )
-        return;
+    // Validasi filter sebelum fetch
+    if (!filters.divisionId || !filters.positionId) {
+      setSchedules(null); // Reset data jika filter tidak lengkap
+      return;
+    }
 
-      const responseData = await getScheduleService({
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { data } = await searchSchedulesService({
         year: filters.year,
         month: filters.month,
         divisionId: filters.divisionId,
         positionId: filters.positionId,
       });
 
-      setSchedules(responseData);
+      // Jika data berhasil diambil tapi array kosong
+      if (!data || data.length === 0) {
+        setError({
+          status: "empty",
+          message: "Jadwal untuk periode ini belum tersedia.",
+        });
+        setSchedules(null);
+      } else {
+        setSchedules(data);
+      }
     } catch (err) {
-      setErrorMessage(err.message || "Terjadi kesalahan saat memuat data");
+      setError(err);
+      setSchedules(null);
     } finally {
       setIsLoading(false);
     }
@@ -56,6 +64,7 @@ export default function ScheduleManagement() {
 
   useEffect(() => {
     fetchSchedules();
+    
   }, [filters]);
 
   return (
@@ -86,20 +95,16 @@ export default function ScheduleManagement() {
           <UploadSchedule filters={filters} onSuccess={fetchSchedules} />
         </div>
 
-        {isLoading ? (
-          <div className="flex h-80 flex-col items-center justify-center gap-4">
-            <LoadingAnimation />
-            <p className="text-sm text-slate-500">Memuat Jadwal...</p>
+        <DataStateWrapper
+          isLoading={isLoading}
+          error={error}
+          onRetry={fetchSchedules}
+          loadingMessage="Memuat jadwal..."
+        >
+          <div className="overflow-hidden rounded-2xl bg-white dark:bg-slate-900/40">
+            <ScheduleTable filters={filters} schedules={schedules} />
           </div>
-        ) : (
-          <div className="flex overflow-x-auto">
-            <ScheduleTable
-              filters={filters}
-              schedules={schedules}
-              errorMessage={errorMessage}
-            />
-          </div>
-        )}
+        </DataStateWrapper>
       </Card>
     </Container>
   );

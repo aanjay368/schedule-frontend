@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import Card from "./Card";
+import SectionHeader from "./SectionHeader";
 
 export default function Modal({ onClose, title, description, content }) {
   return (
@@ -17,9 +18,7 @@ export default function Modal({ onClose, title, description, content }) {
           )}
 
           <div className="pr-10">
-            <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-              {title}
-            </h2>
+            <SectionHeader>{title}</SectionHeader>
             {description && (
               <p className="mt-1 text-sm leading-relaxed font-medium text-slate-500 dark:text-slate-400">
                 {description}
@@ -36,7 +35,7 @@ export default function Modal({ onClose, title, description, content }) {
         <div className="custom-scrollbar p-8 text-slate-700 dark:text-slate-200">
           {content}
         </div>
-      </Card>      
+      </Card>
     </div>
   );
 }

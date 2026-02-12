@@ -8,7 +8,7 @@ export default function CurrentEmployeeProvider({ children }) {
   const [currentEmployee, setCurrentEmployee] = useState({});
 
   useEffect(() => {
-    getCurrentEmployeeService().then((data) => {        
+    getCurrentEmployeeService().then(({data}) => {         
       setCurrentEmployee(data);      
     });
   }, []);

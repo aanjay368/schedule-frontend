@@ -32,12 +32,12 @@ export default function UploadSchedule({
         setUploadProgress((prev) => (prev < 90 ? prev + 10 : prev));
       }, 200);
 
-      const response = await uploadScheduleService(formData);
+      const {data} = await uploadScheduleService(formData);
 
       clearInterval(progressInterval);
       setUploadProgress(100);
 
-      showToast(response, "success");
+      showToast(data, "success");
 
       // Panggil fungsi refresh di Parent
       if (onSuccess) await onSuccess();

@@ -6,40 +6,34 @@ function DivisionPositionSelect({ filters, setFilters, showAllOption = false }) 
   const divisions = useDivision();
   const isInitialMount = useRef(true);
 
-  // 1. Sinkronisasi Otomatis saat Pertama Kali Render & Saat DivisionId Berubah
+  // 1. Sinkronisasi Otomatis
   useEffect(() => {
     if (!divisions || divisions.length === 0) return;
 
-    // Jika showAllOption TRUE dan ini render pertama, biarkan default 0 (Semua)
+    // Jika showAllOption TRUE dan ini render pertama, biarkan default null
     if (showAllOption && isInitialMount.current) {
       isInitialMount.current = false;
       return;
     }
 
-    // Cari divisi yang aktif sekarang berdasarkan state
     const activeDiv = divisions.find((d) => d.id === filters.divisionId);
 
     if (!activeDiv && !showAllOption) {
-      // Kasus: Render Pertama di Schedule (Wajib Pilih)
+      // Kasus: Render Pertama (Wajib Pilih)
       const firstDiv = divisions[0];
       setFilters((prev) => ({
         ...prev,
         divisionId: firstDiv.id,
-        positionId: firstDiv.positions?.[0]?.id || 0,
+        positionId: firstDiv.positions?.[0]?.id || null,
       }));
     } else if (activeDiv) {
-      // Kasus: Perpindahan Divisi
-      // Jika showAllOption aktif, kita bisa pilih apakah mau reset ke 0 atau item pertama.
-      // Sesuai permintaan Anda "Option pertama select otomatis":
-      const firstPosId = activeDiv.positions?.[0]?.id || 0;
-      
-      // Hanya update jika positionId saat ini tidak ada di dalam divisi yang baru
+      // Kasus: Perpindahan Divisi, cek apakah posisi masih relevan
       const isPosInNewDiv = activeDiv.positions.some(p => p.id === filters.positionId);
       
       if (!isPosInNewDiv) {
         setFilters((prev) => ({
           ...prev,
-          positionId: firstPosId,
+          positionId: activeDiv.positions?.[0]?.id || null,
         }));
       }
     }
@@ -51,39 +45,39 @@ function DivisionPositionSelect({ filters, setFilters, showAllOption = false }) 
   const divisionOptions = useMemo(() => {
     const baseOptions = divisions.map((d) => ({ label: d.name, value: d.id }));
     return showAllOption 
-      ? [{ label: "Semua Divisi", value: 0 }, ...baseOptions] 
+      ? [{ label: "Semua Divisi", value: "" }, ...baseOptions] // Value kosong string untuk null handling
       : baseOptions;
   }, [divisions, showAllOption]);
 
   // 3. Options untuk Posisi
   const positionOptions = useMemo(() => {
-    if (showAllOption && filters.divisionId === 0) {
-      return [{ label: "Semua Posisi", value: 0 }];
+    if (showAllOption && (filters.divisionId === null || filters.divisionId === "")) {
+      return [{ label: "Semua Posisi", value: "" }];
     }
 
     const activeDiv = divisions.find((d) => d.id === filters.divisionId);
     const basePositions = activeDiv?.positions?.map((p) => ({ label: p.name, value: p.id })) || [];
     
     return showAllOption 
-      ? [{ label: "Semua Posisi", value: 0 }, ...basePositions] 
+      ? [{ label: "Semua Posisi", value: "" }, ...basePositions] 
       : basePositions;
   }, [divisions, filters.divisionId, showAllOption]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const numericValue = Number(value);
+    
+    // Jika value kosong string "", kita set sebagai null, jika tidak convert ke Number
+    const finalValue = value === "" ? null : Number(value);
 
     setFilters((prev) => {
-      const newState = { ...prev, [name]: numericValue };
+      const newState = { ...prev, [name]: finalValue };
 
-      // Jika yang diubah adalah Divisi, kita siapkan perpindahan posisi otomatis
       if (name === "divisionId") {
-        if (numericValue === 0 && showAllOption) {
-          newState.positionId = 0;
+        if (finalValue === null && showAllOption) {
+          newState.positionId = null;
         } else {
-          const targetDiv = divisions.find((d) => d.id === numericValue);
-          // Otomatis pilih posisi pertama dari divisi yang baru dipilih
-          newState.positionId = targetDiv?.positions?.[0]?.id || 0;
+          const targetDiv = divisions.find((d) => d.id === finalValue);
+          newState.positionId = targetDiv?.positions?.[0]?.id || null;
         }
       }
       return newState;
@@ -96,7 +90,8 @@ function DivisionPositionSelect({ filters, setFilters, showAllOption = false }) 
         <CustomSelectInput
           name="divisionId"
           options={divisionOptions}
-          value={filters.divisionId}
+          // Mapping null kembali ke "" agar sinkron dengan <select> value
+          value={filters.divisionId === null ? "" : filters.divisionId}
           onChange={handleChange}
         />
       </div>
@@ -104,9 +99,9 @@ function DivisionPositionSelect({ filters, setFilters, showAllOption = false }) 
         <CustomSelectInput
           name="positionId"
           options={positionOptions}
-          value={filters.positionId}
+          value={filters.positionId === null ? "" : filters.positionId}
           onChange={handleChange}
-          disabled={showAllOption && filters.divisionId === 0}
+          disabled={showAllOption && (filters.divisionId === null || filters.divisionId === "")}
         />
       </div>
     </div>

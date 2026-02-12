@@ -1,31 +1,31 @@
 // React
-import { memo, useMemo } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 
 // Lucide Icons
 import { User, LayoutGrid, UserCog } from "lucide-react";
 
 // Components
-import  CustomFormComponent from "../../../../components/forms/CustomFormComponent";
+import CustomFormComponent from "../../../../components/forms/CustomFormComponent";
 
 // Services
-import { addEmployeeService } from "../../../../services/employeeService";
+import {
+  addEmployeeService,
+  updateEmployeeService,
+} from "../../../../services/employeeService";
 
 // Developer Feature Contexts
 import { useDivision } from "../../contexts/DivisionsProvider";
 
-// Contexts
-import { useToast } from "../../../../contexts/ToastProvider";
-
 function UpdateEmployee({ employee, onSuccess }) {
   const divisions = useDivision();
-  const { showToast } = useToast();
 
-  const initialData = {
+  const [updateEmployeeForm, setUpdateEmployeeForm] = useState({
     nickname: employee.nickname,
     fullname: employee.fullname,
     divisionId: employee.division.id,
     positionId: employee.position.id,
-  };
+  });
+
   // 2. Kumpulkan SEMUA posisi dari semua divisi (Flat Array)
   const allPositionOptions = useMemo(() => {
     if (!divisions) return [];
@@ -91,22 +91,33 @@ function UpdateEmployee({ employee, onSuccess }) {
     },
   ];
 
-  const handleSubmit = async (formData) => {
+  const handleChange = useCallback(
+    (e) => {
+      setUpdateEmployeeForm((prev) => ({
+        ...prev,
+        [e.target.name]: e.target.value,
+      }));
+    },
+    [updateEmployeeForm],
+  );
+
+  const handleSubmit = useCallback(async (formData) => {
     try {
-      const data = await addEmployeeService(formData);
+      const { data } = await updateEmployeeService(employee.id, formData);
       onSuccess(data);
     } catch (err) {
       throw err;
     }
-  };
+  });
 
   return (
     <div className="w-full">
       <CustomFormComponent
         fields={fields}
+        formData={updateEmployeeForm}
+        onChange={handleChange}
         onSubmit={handleSubmit}
-        buttonName="Simpan Perubahan"
-        initialData={initialData}
+        buttonName={"Tambahkan"}
       />
     </div>
   );

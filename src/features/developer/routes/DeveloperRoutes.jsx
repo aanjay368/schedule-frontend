@@ -17,7 +17,7 @@ const DeveloperLayout = React.lazy(
 
 const DeveloperModule = () => (
   <ProtectedRoute>
-    <Suspense fallback={PageLoader}>
+    <Suspense fallback={<PageLoader/>}>
       <DeveloperLayout />
     </Suspense>
   </ProtectedRoute>
@@ -28,7 +28,7 @@ export const DeveloperRoutes = (
     <Route
       index
       element={
-        <Suspense fallback={PageLoader}>
+        <Suspense fallback={<PageLoader/>}>
           <ScheduleManagement />
         </Suspense>
       }
@@ -36,7 +36,7 @@ export const DeveloperRoutes = (
     <Route
       path="employees"
       element={
-        <Suspense fallback={PageLoader}>
+        <Suspense fallback={<PageLoader/>}>
           <EmployeeManagement />
         </Suspense>
       }
@@ -44,7 +44,7 @@ export const DeveloperRoutes = (
     <Route
       path="schedules"
       element={
-        <Suspense fallback={PageLoader}>
+        <Suspense fallback={<PageLoader/>}>
           <ScheduleManagement />
         </Suspense>
       }

@@ -3,27 +3,27 @@
  * @param {Array} schedules - List datar ScheduleResponse dari backend
  * @returns {Array} List MonthlyScheduleResponse (Employee + Array of Schedules)
  */
-export const groupSchedulesByEmployee = (schedules) => {
+export const groupSchedulesByOwner = (schedules) => {
   if (!schedules || !Array.isArray(schedules)) return [];
 
   const grouped = schedules.reduce((acc, schedule) => {
-    const employeeId = schedule.employee.id;
+    const ownerId = schedule.owner.id;
 
-    if (!acc[employeeId]) {
-      acc[employeeId] = {
-        employee: schedule.employee, // Menyimpan objek EmployeeResponse lengkap
+    if (!acc[ownerId]) {
+      acc[ownerId] = {
+        owner: schedule.owner, // Menyimpan objek EmployeeResponse lengkap
         schedules: [],
       };
     }
 
-    acc[employeeId].schedules.push(schedule);
+    acc[ownerId].schedules.push(schedule);
     return acc;
   }, {});
 
   // Ubah objek menjadi array dan urutkan berdasarkan Absent Number
   return Object.values(grouped).sort((a, b) => {
-    const numA = parseInt(a.employee.absentNumber) || 0;
-    const numB = parseInt(b.employee.absentNumber) || 0;
+    const numA = parseInt(a.owner.absentNumber) || 0;
+    const numB = parseInt(b.owner.absentNumber) || 0;
     return numA - numB;
   });
 };

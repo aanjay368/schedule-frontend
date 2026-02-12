@@ -1,14 +1,17 @@
-// React Router
 import { Link } from "react-router";
 
-// Lucide Icons
 import { Users, User as UserIcon } from "lucide-react";
 
-// Utils
 import { groupSchedulesByShift } from "../../../../utils/scheduleUtils";
 
-// Menggunakan objek style yang Anda berikan
 import { shiftStyles } from "../.././../../constants/shiftStyleConstants";
+
+const formatShiftTime = (time) => {
+  if (!time) return "-";
+  const [hour, minute] = time.split(":").map(Number);
+  return hour >= 23 && minute >= 58 ? "LAST FLIGHT" : time;
+};
+
 
 export default function DailySchedules({ schedules }) {
   const groupedData = groupSchedulesByShift(schedules);
@@ -16,8 +19,7 @@ export default function DailySchedules({ schedules }) {
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       {groupedData.map((group) => {
-        // Ambil style berdasarkan nama warna dari shift. Jika tidak ada, gunakan gray atau purple
-        const style = shiftStyles[group.shift?.color?.name] || shiftStyles.gray;
+        const style = shiftStyles[group.shift?.color] || shiftStyles.gray;
 
         return (
           <div
@@ -42,25 +44,25 @@ export default function DailySchedules({ schedules }) {
                 </p>
                 <p className="font-mono text-sm font-bold">
                   {group.shift.start
-                    ? `${group.shift.start} - ${group.shift.end}`
+                    ? `${formatShiftTime(group.shift.start)} - ${formatShiftTime(group.shift.end)}`
                     : "--:--"}
                 </p>
               </div>
             </div>
 
             {/* Stats */}
-            <div className="flex items-center gap-2 text-xs font-bold tracking-tighter uppercase opacity-80">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase opacity-80">
               <Users size={14} />
-              <span>{group.schedules.length} Personel Bertugas</span>
+              <span>{group.schedules.length} Staff Bertugas</span>
             </div>
 
             {/* List Karyawan (Scrollable jika terlalu banyak) */}
             <div className="mt-2 space-y-2 pr-1">
               {group.schedules.map((item) => (
                 <Link
-                  to={`/staff/schedules/${item.id}`}
+                  to={`/staff/schedules/detail/${item.id}`}
                   key={item.id}
-                  className={`flex items-center justify-between rounded-xl border p-3 transition-colors ${style.employee}`}
+                  className={`flex items-center justify-between rounded-xl border p-3 transition-colors ${style.owner}`}
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-[10px] font-bold">
@@ -68,10 +70,12 @@ export default function DailySchedules({ schedules }) {
                     </div>
                     <div className="flex flex-col">
                       <span className="text-sm font-bold tracking-wide">
-                        {item.employee.nickname}
+                        {item.filler
+                          ? item.filler.nickname
+                          : item.owner.nickname}
                       </span>
                       <span className="text-[10px] opacity-70">
-                        Absen: {item.employee.absentNumber || "-"}
+                        Absen: {item.owner.absentNumber || "-"}
                       </span>
                     </div>
                   </div>

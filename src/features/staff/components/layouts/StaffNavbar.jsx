@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 
 // Lucide Icons
-import { Calendar, LogOut, Menu, Settings, User, X } from "lucide-react";
+import { Calendar, LogOut, Menu, Send, Settings, User, UsersRound, X } from "lucide-react";
 
 // Contexts
 import { useAuth } from "../../../../contexts/AuthProvider";
@@ -31,10 +31,20 @@ export default function StaffNavbar() {
       icon: <User size={20} />,
     },
     {
+      label: "Permintaan",
+      path: "/staff/submissions",
+      icon: <Send size={20} />,
+    },
+    {
+      label: "Full",
+      path: "/staff/backups",
+      icon: <UsersRound size={20} />,
+    },
+    {
       label: "Pengaturan",
       path: "/staff/settings",
       icon: <Settings size={20} />,
-    },
+    },    
   ];
 
   useEffect(() => {
@@ -77,8 +87,9 @@ export default function StaffNavbar() {
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-xl font-bold text-transparent">
             {/* Logika Judul Sederhana */}
-            {menuItems.find((item) => pathname.includes(item.path.split("/")[2]))?.label ||
-              "Dashboard"}
+            {menuItems.find((item) =>
+              pathname.includes(item.path.split("/")[2]),
+            )?.label || "Dashboard"}
           </span>
 
           {/* Desktop Navigation */}

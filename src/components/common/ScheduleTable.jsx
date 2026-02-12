@@ -1,13 +1,9 @@
 // React
 import { useMemo, memo } from "react";
 
-// Components
-import  DataNotFound  from "../ui/DataNotFound";
-
 // Utils
-import { groupSchedulesByEmployee } from "../../utils/scheduleUtils";
+import { groupSchedulesByOwner } from "../../utils/scheduleUtils";
 
-// Memoized function untuk generate hari dalam bulan
 const getDaysInMonth = (year, month) => {
   const daysInMonth = new Date(year, month, 0).getDate();
   return Array.from({ length: daysInMonth }, (_, i) => i + 1);
@@ -32,7 +28,7 @@ const TableCell = memo(({ schedule, isHoliday }) => {
       className={`border-l border-gray-100 px-2 py-2 text-center text-sm font-medium dark:border-slate-700 ${
         isHoliday
           ? "bg-gray-400 text-gray-400"
-          : "bg-white text-gray-900 dark:bg-slate-900/20 dark:text-gray-200"
+          : " text-gray-900  dark:text-gray-200"
       }`}
     >
       <span className="font-mono text-xs">{schedule?.shift?.label || "-"}</span>
@@ -43,21 +39,21 @@ const TableCell = memo(({ schedule, isHoliday }) => {
 TableCell.displayName = "TableCell";
 
 // Memoized TableRow component
-const TableRow = memo(({ employee, days, scheduleMap }) => {
+const TableRow = memo(({ owner, days, scheduleMap }) => {
   return (
-    <tr key={employee.id}>
-      <td className="bg-white px-3 py-2 text-sm font-medium text-gray-900 dark:bg-slate-900/20 dark:text-slate-200">
-        {employee.absentNumber}
+    <tr key={owner.id}>
+      <td className=" px-3 py-2 text-sm font-medium text-gray-900  dark:text-slate-200">
+        {owner.absentNumber}
       </td>
-      <td className="bg-white px-3 py-2 text-sm font-medium text-nowrap text-gray-900 dark:bg-slate-900/20 dark:text-slate-200">
-        {employee.fullname || "-"}
+      <td className=" px-3 py-2 text-sm font-medium text-nowrap text-gray-900  dark:text-slate-200">
+        {owner.fullname || "-"}
       </td>
       {days.map((day) => {
         const schedule = scheduleMap.get(day);
         const isHoliday = schedule?.shift?.label === "L";
         return (
           <TableCell
-            key={`${employee.id}-${day}`}
+            key={`${owner.id}-${day}`}
             schedule={schedule}
             isHoliday={isHoliday}
           />
@@ -76,11 +72,11 @@ const TableBody = memo(({ processedData, days }) => {
   }, [processedData]);
 
   return (
-    <tbody className="divide-y divide-gray-200 bg-white dark:divide-slate-700 dark:bg-slate-900/20">
-      {processedData?.map(({ employee, schedules }, index) => (
+    <tbody className="divide-y divide-gray-200  dark:divide-slate-700 ">
+      {processedData?.map(({ owner, schedules }, index) => (
         <TableRow
-          key={employee.id}
-          employee={employee}
+          key={owner.id}
+          owner={owner}
           days={days}
           scheduleMap={scheduleMaps[index]}
         />
@@ -92,23 +88,15 @@ const TableBody = memo(({ processedData, days }) => {
 TableBody.displayName = "TableBody";
 
 // Main ScheduleTable component
-function ScheduleTable({ filters, schedules, errorMessage }) {
+function ScheduleTable({ filters, schedules }) {
   const days = useMemo(
     () => getDaysInMonth(filters.year, filters.month),
     [filters.year, filters.month],
   );
 
   const processedData = useMemo(() => {
-    return groupSchedulesByEmployee(schedules);
+    return groupSchedulesByOwner(schedules);
   }, [schedules]);
-
-  if (errorMessage) {
-    return (
-      <div className="flex min-h-[40vh] w-full">
-        <DataNotFound errorMessage={errorMessage} />
-      </div>
-    );
-  }
 
   return (
     <div
@@ -116,19 +104,19 @@ function ScheduleTable({ filters, schedules, errorMessage }) {
     >
       <div className="w-full overflow-x-scroll">
         <table className="divide-y divide-gray-200 dark:divide-slate-700">
-          <thead className="bg-gray-50/30 dark:bg-slate-900/20">
+          <thead className=" ">
             <tr>
-              <th className="bg-gray-50/30 px-3 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:bg-slate-900/20 dark:text-slate-200">
+              <th className=" px-3 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase  dark:text-slate-200">
                 No
               </th>
 
-              <th className="bg-gray-50/30 px-3 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:bg-slate-900/20 dark:text-slate-200">
+              <th className=" px-3 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase  dark:text-slate-200">
                 Nama
               </th>
               {days.map((day) => (
                 <th
                   key={day}
-                  className="px-2 py-3 text-center text-xs font-medium tracking-wider text-gray-500 uppercase dark:bg-slate-900/20 dark:text-slate-200"
+                  className="px-2 py-3 text-center text-xs font-medium tracking-wider text-gray-500 uppercase  dark:text-slate-200"
                 >
                   {day}
                 </th>

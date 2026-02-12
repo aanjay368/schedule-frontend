@@ -1,31 +1,41 @@
 // React
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 
 // Third-party libraries
 import { format } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 
 // Components
-import LoadingAnimation from "../../../components/ui/LoadingAnimation";
-import DateSelector from "../../../components/forms/CustomDateSelect";
+import CustomDateInput from "../../../components/forms/CustomDateInput";
 import DailySchedules from "../components/common/DailySchedules";
 
-// Lucide Icons
-import { FileText } from "lucide-react";
-
 // Services
-import { getScheduleService } from "../../../services/scheduleService";
+import { searchSchedulesService } from "../../../services/scheduleService";
 
 // Contexts
 import { useAuth } from "../../../contexts/AuthProvider";
 import Container from "../../../components/ui/Container";
+import DataStateWrapper from "../../../components/ui/DataStateWrapper";
+
+//date
+import { parse } from "date-fns";
+import { useNavigate, useSearchParams } from "react-router";
+import { id } from "date-fns/locale";
 
 export default function SearchSchedule() {
   const { user } = useAuth();
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedDate, setSelectedDate] = useState(
+    searchParams.get("date")
+      ? parse(searchParams.get("date"), "dd-MM-yyyy", new Date(), {
+          locale: id,
+        })
+      : new Date(),
+  );
   const [schedules, setSchedules] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const dateParams = useMemo(
     () => ({
@@ -38,25 +48,36 @@ export default function SearchSchedule() {
 
   useEffect(() => {
     setIsLoading(true);
-    setErrorMessage("");
-
-    getScheduleService({
+    setError(null);
+    searchSchedulesService({
       year: dateParams.year,
       month: dateParams.month,
       divisionId: user?.division?.id,
       positionId: user?.position?.id,
       date: dateParams.day,
     })
-      .then((data) => {
+      .then(({ data }) => {
         setSchedules(data);
       })
       .catch((err) => {
-        setErrorMessage(err.message || "Gagal memuat jadwal");
+        setError(err);
       })
       .finally(() => {
         setIsLoading(false);
       });
   }, [dateParams, user?.division?.id, user?.position?.id]);
+
+  const handleSelectDate = useCallback(
+    (e) => {
+      const params = new URLSearchParams();
+      params.append("date", format(e.target.value, "dd-MM-yyyy"));
+      navigate({
+        search: params.toString() ? `${params.toString()}` : "",
+      });
+      setSelectedDate(e.target.value);
+    },
+    [navigate, selectedDate, setSelectedDate],
+  );
 
   return (
     <Container className="flex flex-col items-center gap-8 sm:gap-12">
@@ -69,9 +90,10 @@ export default function SearchSchedule() {
 
       {/* Control Section */}
       <section className="w-full max-w-md space-y-2">
-        <DateSelector
-          date={format(selectedDate, "yyyy-MM-dd")}
-          handleSelectDate={setSelectedDate}
+        <CustomDateInput
+          pattern="EEEE, dd MMMM yyyy"
+          value={selectedDate}
+          onChange={handleSelectDate}
         />
         <p className="mt-1 text-center text-sm text-gray-500">
           Pilih tanggal untuk melihat jadwal
@@ -80,38 +102,16 @@ export default function SearchSchedule() {
 
       {/* Content Section */}
       <section className="w-full">
-        {isLoading ? (
-          <div className="flex h-64 flex-col items-center justify-center gap-4">
-            <LoadingAnimation />
-            <p className="animate-pulse text-sm text-gray-400">
-              Menghubungkan ke server...
-            </p>
-          </div>
-        ) : errorMessage ? (
-          <ErrorPlaceholder message={errorMessage} />
-        ) : (
+        <DataStateWrapper
+          isLoading={isLoading}
+          error={error}
+          loadingMessage="Memuat jadwal..."
+        >
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
             <DailySchedules schedules={schedules} />
           </div>
-        )}
+        </DataStateWrapper>
       </section>
     </Container>
-  );
-}
-
-/**
- * Sub-komponen untuk Error State agar JSX utama lebih bersih
- */
-function ErrorPlaceholder({ message }) {
-  return (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border border-gray-100 bg-gray-50 shadow-inner dark:border-slate-800 dark:bg-slate-900">
-        <FileText size={48} className="text-gray-300" />
-      </div>
-      <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200">
-        Terjadi Kesalahan
-      </h3>
-      <p className="mt-2 max-w-xs text-gray-400">{message}</p>
-    </div>
   );
 }

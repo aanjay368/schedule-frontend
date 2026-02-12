@@ -1,54 +1,40 @@
-import { apiClient } from "./api-client";
+/** @format */
+import { api } from "./api-client";
 
-export async function uploadScheduleService(formData) {
-  const responseData = await apiClient(`/api/v1/schedules`, {
-    method: "POST",
+// Upload Excel Schedule
+export async function uploadScheduleService(payload) {
+  // Saat mengirim payload, Axios otomatis mengatur header multipart/form-data
+  return await api.post("/api/v1/schedules", payload, {
     headers: {
-      Accept: "application/json",
+      "Content-Type": "multipart/form-data",
     },
-    body: formData,
   });
-
-  return responseData;
 }
 
-export async function getScheduleService({
-  year,
-  month,
-  divisionId,
-  positionId,
-  date = "",
-  employeeId = "",
-} = {}) { // Default empty object agar tidak error jika dipanggil tanpa argumen
-  
-  // Membangun Query Params secara dinamis
-  const params = new URLSearchParams({
-    year,
-    month,
-    divisionId,
-    positionId,
-    date,
-    employeeId
-  }).toString();
-
-  const responseData = await apiClient(`/api/v1/schedules?${params}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
+// Get schedules with dynamic filters
+export async function searchSchedulesService({
+  year = null,
+  month = null,
+  divisionId = null,
+  positionId = null,
+  date = null,
+  ownerId = "",
+} = {}) {
+  // Axios akan mengubah object params ini menjadi query string:
+  // ?year=2024&month=1&divisionId=... (dan mengabaikan yang null/undefined)
+  return await api.get("/api/v1/schedules", {
+    params: {
+      year,
+      month,
+      divisionId,
+      positionId,
+      date,
+      ownerId,
     },
   });
-
-  return responseData;
 }
 
-export async function getScheduleDetailService(scheduleId) { 
-  
-  const responseData = await apiClient(`/api/v1/schedules/${scheduleId}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-    },
-  });
-
-  return responseData;
+// Get single schedule detail
+export async function getScheduleDetailsService(scheduleId) {
+  return await api.get(`/api/v1/schedules/${scheduleId}`);
 }

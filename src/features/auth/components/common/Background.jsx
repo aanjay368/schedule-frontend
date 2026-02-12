@@ -1,10 +1,10 @@
 
 import { useEffect, useState, useCallback, memo } from "react";
-import image1 from '../../../../assets/images/4k-plane.jpg';
-import image2 from '../../../../assets/images/4k-plane-with-car-5dvyg0410dk3q7si.jpg';
-import image3 from '../../../../assets/images/private-luxury-jet-airport-terminal.jpg';
-import image4 from '../../../../assets/images/busy-airport-view-with-airplanes-against-clear-sky.jpg';
-import image5 from '../../../../assets/images/airport-terminal.jpg';
+import image1 from '../../../../assets/images/4k-plane.webp';
+import image2 from '../../../../assets/images/4k-plane-with-car-5dvyg0410dk3q7si.webp';
+import image3 from '../../../../assets/images/private-luxury-jet-airport-terminal.webp';
+import image4 from '../../../../assets/images/busy-airport-view-with-airplanes-against-clear-sky.webp';
+import image5 from '../../../../assets/images/airport-terminal.webp';
 
 const images = [
   image1,

@@ -16,7 +16,7 @@ const FilterEmployee = ({ filters, onFilters }) => {
         name={"name"}
         icon={<Search />}
         value={filters["name"]}
-        placeHolder="Cari Nama Karyawan..."
+        placeholder="Cari Nama Karyawan..."
         onChange={handleChange}
       />
       <DivisionPositionSelect

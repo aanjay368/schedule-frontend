@@ -1,76 +1,27 @@
-import { apiClient } from "../../../services/api-client";
-
-// Get shifts by division and position
-export async function getColorsService() {
-  
-    const responseData = await apiClient(
-      `/api/v1/shifts/colors`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-        },
-      },
-    );
-    return responseData;
-
-}
+/** @format */
+import { api } from "../../../services/api-client";
 
 // Get shifts by division and position
 export async function getShiftsService(divisionId, positionId) {
-  
-    const responseData = await apiClient(
-      `/api/v1/shifts?division=${divisionId}&position=${positionId}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-        },
-      },
-    );
-    return responseData;
-
+  return await api.get("/api/v1/shifts", {
+    params: {
+      division: divisionId,
+      position: positionId
+    }
+  });
 }
 
 // Add new shift
-export async function addShiftService(addShiftForm) {
-  
-    const responseData = await apiClient(`/api/v1/shifts`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(addShiftForm),
-    });
-    return responseData;
-  
+export async function addShiftService(payload) {
+  return await api.post("/api/v1/shifts", payload);
 }
 
 // Update shift
-export async function updateShiftService(shiftId, addShiftForm) {
-  
-    const responseData = await apiClient(`/api/v1/shifts/${shiftId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(addShiftForm),
-    });
-    return responseData;
-  
+export async function updateShiftService(shiftId, payload) {
+  return await api.put(`/api/v1/shifts/${shiftId}`, payload);
 }
 
 // Delete shift
 export async function deleteShiftsService(shiftId) {
-  
-    const responseData = await apiClient(`/api/v1/shifts/${shiftId}`, {
-      method: "DELETE",
-      headers: {        
-        "Accept": "application/json",
-      }      
-    });
-    return responseData;
-  
+  return await api.delete(`/api/v1/shifts/${shiftId}`);
 }

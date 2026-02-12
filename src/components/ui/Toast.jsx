@@ -25,15 +25,17 @@ export default function Toast({
   };
 
   return (
-    <div className="animate-in max-w-sm slide-in-from-right fade-in fixed right-5 bottom-5 z-[100] duration-300">
+    <div className="animate-in slide-in-from-right fade-in fixed bottom-145 z-[100] px-2 duration-300 sm:right-5 sm:bottom-5 sm:max-w-sm sm:px-0">
       <div
         className={`flex items-center gap-3 rounded-xl border p-4 shadow-lg backdrop-blur-sm ${styles[type]}`}
       >
         <div className="flex-shrink-0">{icons[type]}</div>
-        
+
         <p className="text-sm font-medium">
           {/* Label status dengan format span */}
-          <span className={`font-bold tracking-wider mr-1 ${type === "success" ? "text-emerald-500" : "text-rose-500"}`}>
+          <span
+            className={`mr-1 font-bold tracking-wider ${type === "success" ? "text-emerald-500" : "text-rose-500"}`}
+          >
             {type === "success" ? "Berhasil : " : "Error : "}
           </span>{" "}
           {message}

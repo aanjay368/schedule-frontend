@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import CurrentEmployeeProvider from "../../contexts/CurrentEmployeeProvider";
 import { useEffect } from "react";
 import Wrapper from "../../../../components/ui/Wrapper";
+import { ModalOverlayProvider } from "../../../../contexts/ModalOverlayProvider";
 
 export default function StaffLayout() {
   const { pathname } = useLocation();
@@ -14,13 +15,15 @@ export default function StaffLayout() {
 
   return (
     <CurrentEmployeeProvider>
-      <main>
-        <UserNavbar />
-        <Wrapper className="flex-1 px-4 py-16 transition-colors dark:bg-slate-900">
-          <Outlet />
-        </Wrapper>
-        <Footer />
-      </main>
+      <ModalOverlayProvider>
+        <main>
+          <UserNavbar />
+          <Wrapper className="flex-1 px-4 py-16 transition-colors dark:bg-slate-900">
+            <Outlet />
+          </Wrapper>
+          <Footer />
+        </main>
+      </ModalOverlayProvider>
     </CurrentEmployeeProvider>
   );
 }

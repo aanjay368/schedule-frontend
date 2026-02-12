@@ -5,6 +5,7 @@ const ThemeSetting = lazy(() => import("../pages/ThemeSetting"));
 const SettingMenu = lazy(() => import("../pages/SettingMenu"));
 const PasswordSetting = lazy(() => import("../pages/PasswordSetting"));
 const UsernameSetting = lazy(() => import("../pages/UsernameSetting"));
+const Report = lazy(() => import("../pages/Report"));
 
 export const SettingRoutes = (
   <Route path="settings">
@@ -37,6 +38,14 @@ export const SettingRoutes = (
       element={
         <Suspense fallback={<PageLoader />}>
           <ThemeSetting />
+        </Suspense>
+      }
+    />
+    <Route
+      path="report"
+      element={
+        <Suspense fallback={<PageLoader />}>
+          <Report />
         </Suspense>
       }
     />

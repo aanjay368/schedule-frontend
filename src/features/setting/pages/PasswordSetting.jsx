@@ -1,5 +1,5 @@
 // React
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 // React Router
 import { useNavigate } from "react-router";
@@ -22,11 +22,45 @@ const PasswordSetting = () => {
   const navigate = useNavigate();
   const { updateUser } = useAuth();
   const { showToast } = useToast();
+  const [updatePasswordForm, setUpdatePasswordForm] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const fields = [
+    {
+      name: "oldPassword",
+      label: "Password Lama",
+      type: "password",
+      icon: <Lock size={18} />,
+    },
+    {
+      name: "newPassword",
+      label: "Password Baru",
+      type: "password",
+      icon: <KeyRound size={18} />,
+    },
+    {
+      name: "confirmPassword",
+      label: "Konfirmasi",
+      type: "password",
+      icon: <KeyRound size={18} />,
+    },
+  ];
+
+  const handleChange = useCallback(
+    (e) =>
+      setUpdatePasswordForm((prev) => ({
+        ...prev,
+        [e.target.name]: e.target.value,
+      })),
+    [updatePasswordForm],
+  );
 
   const handleSubmit = useCallback(
     async (payload) => {
       try {
-        const data = await updateUserService(payload);
+        const { data } = await updateUserService(payload);
         updateUser(data);
         navigate(-1);
         showToast("Password berhasil diperbarui");
@@ -49,28 +83,10 @@ const PasswordSetting = () => {
       infoMessage="Semua perubahan keamanan akan dicatat untuk melindungi akun Anda."
     >
       <CustomFormComponent
-        fields={[
-          {
-            name: "oldPassword",
-            label: "Password Lama",
-            type: "password",
-            icon: <Lock size={18} />,
-          },
-          {
-            name: "newPassword",
-            label: "Password Baru",
-            type: "password",
-            icon: <KeyRound size={18} />,
-          },
-          {
-            name: "confirmPassword",
-            label: "Konfirmasi",
-            type: "password",
-            icon: <KeyRound size={18} />,
-          },
-        ]}
+        fields={fields}
         buttonName="Ganti"
-        color="orange"
+        formData={updatePasswordForm}
+        onChange={handleChange}
         onSubmit={handleSubmit}
       />
     </SettingDetailLayout>

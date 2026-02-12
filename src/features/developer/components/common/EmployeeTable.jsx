@@ -1,31 +1,17 @@
 import { User, ChevronRight, UserCog, LayoutGrid } from "lucide-react";
-import DataNotFound from "../../../../components/ui/DataNotFound";
 // Menggunakan komponen yang kita perbaiki tadi
 
 export default function EmployeeTable({
   employees,  
   onSelect,
-  errorMessage,
-}) {
-  // 1. Filter Lokal untuk Nama (agar pencarian terasa instan/real-time)  
-
-  if (errorMessage) {
-    return <div className="p-8 text-center text-red-500">{errorMessage}</div>;
-  }
-
-  if (employees.length === 0) {
-    return <DataNotFound errorMessage="Karyawan tidak ditemukan." />;
-  }
+}) {  
 
   return (
     <div className="overflow-x-auto">
       <table className="w-full border-collapse text-left text-sm">
         {/* Header Tabel */}
         <thead className="sticky top-0 z-10 bg-slate-50 text-slate-600 dark:bg-slate-900/50 dark:text-slate-400">
-          <tr className="border-b border-slate-200 dark:border-slate-800">
-            <th className="px-1 py-4 text-center font-semibold tracking-wider uppercase">
-              No
-            </th>
+          <tr className="border-b border-slate-200 dark:border-slate-800">           
             <th className="px-6 py-4 font-semibold tracking-wider uppercase">
               Karyawan
             </th>
@@ -37,25 +23,19 @@ export default function EmployeeTable({
               Posisi
             </th>
             <th className="px-6 py-4 text-right font-semibold tracking-wider uppercase">
-              Show
+              Lihat
             </th>
           </tr>
         </thead>
 
         {/* Body Tabel */}
         <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-          {employees.map((employee) => (
+          {employees?.map((employee) => (
             <tr
               key={employee.id}
               onClick={() => onSelect(employee)}
               className="group cursor-pointer transition-colors hover:bg-purple-50/50 dark:hover:bg-slate-900/30"
-            >
-              {/* Nomor Absen */}
-              <td className="px-1 py-4 text-center">
-                <span className=" bg-slate-100 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">                  
-                  {employee.absentNumber || "-"}
-                </span>
-              </td>
+            >            
 
               {/* Profil Karyawan */}
               <td className="px-6 py-4">

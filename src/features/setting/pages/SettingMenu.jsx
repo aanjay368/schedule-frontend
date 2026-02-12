@@ -1,23 +1,15 @@
-import {
-  User,
-  KeyRound,
-  Palette,
-  Smartphone,
-  MessageSquareWarning,
-} from "lucide-react";
-
-import { ChevronRight } from "lucide-react";
-import { Link, useLocation } from "react-router";
+import { User, KeyRound, Palette, MessageSquareWarning } from "lucide-react";
 
 // UI Components
 import Container from "../../../components/ui/Container";
-import Card from "../../../components/ui/Card";
-import {
-  DetailGroup,
-  DetailItem,
-} from "../../../components/layouts/DataDetailLayout";
+import { DetailGroup } from "../../../components/layouts/DataDetailLayout";
+
+import SectionHeader from "../../../components/ui/SectionHeader";
+import MenuItem from "../../../components/ui/MenuItem";
+import {useLocation} from "react-router";
 
 export default function SettingMenu() {
+  const {pathname} =  useLocation()
   const menuConfig = [
     {
       group: "Akses Akun",
@@ -62,50 +54,31 @@ export default function SettingMenu() {
   ];
 
   return (
-    <Container className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-      {menuConfig.map((section, idx) => (
-        <DetailGroup
-          label={section.group}
-          className={section.span ? "sm:col-span-2" : ""}
-        >
-          <div className="flex flex-col gap-4">
+    <Container className="space-y-4">
+      <SectionHeader>Menu Pengaturan</SectionHeader>
+      {menuConfig.map((section) => (
+        <DetailGroup key={section.group} label={section.group}>
+          <div className="flex flex-col gap-4 sm:flex-row">
             {section.items.map((item) => (
-              <MenuItem
-                icon={item.icon}
-                label={item.label}
-                desc={item.desc}
-                path={item.path}
-              />
+              <MenuItem key={item.label} to={`${pathname}${item.path}`}>
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 text-slate-400 transition-colors group-hover:text-purple-500">
+                    {item.icon}
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
+                      {item.label}
+                    </p>
+                    <p className="text-xs font-medium text-slate-400">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+              </MenuItem>
             ))}
           </div>
         </DetailGroup>
       ))}
     </Container>
-  );
-}
-
-function MenuItem({ icon, label, desc, path }) {
-  const { pathname } = useLocation();
-
-  return (
-    <Link to={`${pathname}${path}`}>
-      <Card className="group flex w-full items-center justify-between p-4 text-left transition-all active:bg-slate-50 dark:active:bg-slate-900">
-        <div className="group flex items-start gap-4">
-          <div className="mt-1 text-slate-400 transition-colors group-hover:text-purple-500">
-            {icon}
-          </div>
-          <div className="space-y-0.5">
-            <p className="text-sm font-bold text-slate-700 dark:text-slate-200">{label}</p>
-            <span  className="text-xs font-medium text-slate-400">
-              {desc|| "-"}
-            </span>
-          </div>
-        </div>        
-        <ChevronRight
-          size={18}
-          className="text-slate-200 transition-all group-hover:translate-x-1 group-hover:text-purple-500"
-        />
-      </Card>
-    </Link>
   );
 }

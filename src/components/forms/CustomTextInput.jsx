@@ -9,9 +9,10 @@ export default function CustomTextInput({
   type,
   icon,
   value,
-  placeHolder,
+  placeholder,
   onChange,
   hasError,
+  maxLength  
 }) {
   const [visiblePasswords, setVisiblePasswords] = useState(false);
   return (
@@ -27,10 +28,11 @@ export default function CustomTextInput({
         id={name}
         name={name}
         type={type === "password" && visiblePasswords ? "text" : type}
-        placeholder={placeHolder}
-        onChange={onChange}
+        placeholder={placeholder}
+        onChange={onChange}        
+        maxLength={maxLength}
         value={value}
-        className={`block w-full rounded-lg border py-2.5 text-sm transition-all placeholder:text-slate-500 placeholder:italic  focus:ring-2 focus:outline-none  ${icon ? "pl-10" : "pl-4"} pr-4 ${
+        className={`block w-full rounded-lg border py-2.5 text-sm transition-all placeholder:italic placeholder-slate-400 focus:ring-2 focus:outline-none  ${icon ? "pl-10" : "pl-4"} pr-4 ${
           hasError
             ? "border-red-500 text-red-500 focus:ring-red-500/20 dark:bg-red-500/5"
             : "border-slate-200 focus:border-purple-500 focus:ring-purple-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"

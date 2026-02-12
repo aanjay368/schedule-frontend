@@ -1,14 +1,12 @@
 import DeveloperSidebar from "./DeveloperSidebar";
 import { Outlet } from "react-router";
 import Wrapper from "../../../../components/ui/Wrapper";
-import ShiftColorOptionsProvider from "../../contexts/ShiftColorOptionsProvider";
 import DivisionsProvider from "../../contexts/DivisionsProvider";
 import { ModalOverlayProvider } from "../../../../contexts/ModalOverlayProvider";
 
 export default function DeveloperLayout() {
   return (
-    <DivisionsProvider>
-      <ShiftColorOptionsProvider>
+    <DivisionsProvider>      
         <ModalOverlayProvider>
           <main className="flex h-screen overflow-hidden bg-slate-50 transition-colors dark:bg-slate-900">
             <DeveloperSidebar />
@@ -18,7 +16,6 @@ export default function DeveloperLayout() {
             </Wrapper>
           </main>
         </ModalOverlayProvider>
-      </ShiftColorOptionsProvider>
     </DivisionsProvider>
   );
 }
